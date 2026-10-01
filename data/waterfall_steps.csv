@@ -1,0 +1,12 @@
+crop,order,delta,cumulative_start,cumulative_end,absolute_start,absolute_end,kind,next_order
+Start,0,0,0,0,3805325,3805325,start,1
+Potatoes,1,34734,0,34734,3805325,3840059,increase,2
+Cucumbers,2,22817,34734,57551,3840059,3862876,increase,3
+Lettuce (head),3,21359,57551,78910,3862876,3884235,increase,4
+Tomatoes,4,-39574,78910,39336,3884235,3844661,decrease,5
+Carrots,5,-31489,39336,7847,3844661,3813172,decrease,6
+Onions,6,-18500,7847,-10653,3813172,3794672,decrease,7
+Mushrooms,7,-16152,-10653,-26805,3794672,3778520,decrease,8
+Peas,8,-15283,-26805,-42088,3778520,3763237,decrease,9
+Remaining crops,9,-4717,-42088,-46805,3763237,3758520,decrease,10
+End,10,-46805,0,-46805,3805325,3758520,end,

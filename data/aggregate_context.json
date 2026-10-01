@@ -1,0 +1,78 @@
+{
+  "financial_years": [
+    "2020–21",
+    "2021–22",
+    "2022–23",
+    "2023–24",
+    "2024–25"
+  ],
+  "headline": {
+    "all_vegetables_tonnes": 3784010,
+    "all_vegetables_value_aud_m": 6031.8,
+    "tonnes_source": "Hort Innovation all vegetables, PDF page 3 / printed page 203",
+    "value_source": "ABS Table 1 row 9, 2024–25 release; nominal farm-gate value"
+  },
+  "listed_crops": {
+    "count": 33,
+    "tonnes_by_year": [
+      3805325,
+      3681185,
+      3557595,
+      3812952,
+      3758520
+    ],
+    "value_aud_m_by_year": [
+      4795.9,
+      5402.5,
+      5699.6,
+      5586.0,
+      5900.8
+    ],
+    "production_endpoint_delta_tonnes": -46805,
+    "production_endpoint_change_percent": -1.229986926215243,
+    "value_endpoint_change_percent": 23.03842865781188
+  },
+  "all_vegetables": {
+    "hort_tonnes_by_year": [
+      3827328,
+      3706677,
+      3585393,
+      3838354,
+      3784010
+    ],
+    "abs_aggregate_value_aud_m_by_year": [
+      4908.0,
+      5529.6,
+      5841.4,
+      5714.5,
+      6031.8
+    ],
+    "production_endpoint_delta_tonnes": -43318,
+    "production_endpoint_change_percent": -1.1318078826795142,
+    "value_endpoint_change_percent": 22.897310513447433,
+    "latest_tonnes_minus_abs_listed": 25490,
+    "other_vegetables_hort_tonnes": 25488,
+    "tonnage_residual_vs_other_vegetables": 2,
+    "caveat": "ABS Table 3's 33 listed crops are not all vegetables; no ABS all-vegetable production row is present. Histories are not patched from Hort."
+  },
+  "state_coverage": {
+    "reporting_states": 7,
+    "possible_reporting_state_crop_cells": 231,
+    "reported_cells": 185,
+    "absent_cells": 46,
+    "act_reported_cells": 0,
+    "latest_reported_state_tonnes": 3758513,
+    "national_minus_reported_states_tonnes": 7,
+    "carrot_national_tonnes": 304038,
+    "wa_carrot_share_percent": 38.61425216584769,
+    "caveat": "Missing combinations remain unreported, not zero. State sums and mosaic show reported cells only; no residual allocation."
+  },
+  "source_snapshot": {
+    "abs_release_date": "2026-06-30",
+    "raw_acquired_date": "2026-09-30",
+    "abs_workbook": "AAHDC_Aust_Horticulture_202425.xlsx",
+    "abs_crop_sheet": "Table 3",
+    "abs_crop_source_rows": "6–441",
+    "abs_aggregate_value_cells": "Table 1 D9:H9"
+  }
+}
