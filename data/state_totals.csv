@@ -1,0 +1,9 @@
+state_code,state,tonnes,reported_crops,missing_crops,status
+1,New South Wales,377340,33,0,reported
+2,Victoria,926494,31,2,reported_partial
+3,Queensland,711162,31,2,reported_partial
+4,South Australia,772631,27,6,reported_partial
+5,Western Australia,338170,32,1,reported_partial
+6,Tasmania,628388,25,8,reported_partial
+7,Northern Territory,4328,6,27,reported_partial
+8,Australian Capital Territory,,0,33,missing

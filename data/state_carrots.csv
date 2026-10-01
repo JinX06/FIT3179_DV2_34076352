@@ -1,0 +1,9 @@
+state_code,state,tonnes,share_percent,status
+1,New South Wales,5824,1.915550029930469,reported
+2,Victoria,53230,17.507679961057498,reported
+3,Queensland,31205,10.263519691617496,reported
+4,South Australia,46547,15.309599457962491,reported
+5,Western Australia,117402,38.61425216584769,reported
+6,Tasmania,49830,16.389398693584354,reported
+7,Northern Territory,,,missing
+8,Australian Capital Territory,,,missing
