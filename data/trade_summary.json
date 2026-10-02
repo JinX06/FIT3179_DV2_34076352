@@ -1,0 +1,36 @@
+{
+  "year": 2025,
+  "period_basis": "calendar year",
+  "reporter": "Australia",
+  "reporter_code": "36",
+  "flow": "Exports",
+  "hs_code": "070610",
+  "category": "Vegetables, root; carrots and turnips, fresh or chilled",
+  "classification": "H6 (HS 2022)",
+  "value_unit": "current USD",
+  "weight_unit": "kg",
+  "world_value_usd": 45893166.568,
+  "world_net_kg": 82938056.22,
+  "records": 34,
+  "nonworld_records": 33,
+  "top_three_value_usd": 28160400.272,
+  "top_three_share_percent": 61.36076975702837,
+  "top_five_value_usd": 36685348.679,
+  "top_five_share_percent": 79.93640757964096,
+  "malaysia_rank": 3,
+  "malaysia_ahead_of_singapore_usd": 14384.684,
+  "nonworld_value_residual_usd": 0.001,
+  "special_partner_codes_retained_in_reconciliation": [
+    "490",
+    "837"
+  ],
+  "source_file": "data/raw/un_comtrade_Australia_2025_HS070610_exports_preview.json",
+  "source_url": "https://comtradeapi.un.org/public/v1/preview/C/A/HS?period=2025&reporterCode=36&flowCode=X&cmdCode=070610&maxRecords=500&includeDesc=true",
+  "caveats": [
+    "Exports can include re-exports; Australian-grown origin is not asserted.",
+    "Destinations are last-known destinations; OD lines are schematic connections, not routes.",
+    "The product includes turnips; calendar-year trade is not financial-year ABS carrot production.",
+    "All raw isAggregate flags are true; World is excluded using partnerCode=0 rather than that flag.",
+    "Other Asia, nes and Bunkers remain in reconciliation but have no invented country geometry."
+  ]
+}

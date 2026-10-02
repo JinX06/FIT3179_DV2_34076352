@@ -1,0 +1,83 @@
+{
+  "metadata": {
+    "period": "Year ending June 2025",
+    "unit": "tonnes",
+    "organisation": "Hort Innovation",
+    "release": "Australian Horticulture Statistics Handbook 2024/25 V1.0",
+    "source_url": "https://edge.sitecorecloud.io/hortinnovat2fab-hortinnovat9661-production6d5f-0e78/media/Sub-pages/About-us/What-we-do/PDFs-and-other-media/australian-horticulture-statistics-handbook-2024-25-vegetables.pdf",
+    "source_pages": {
+      "overview_pdf": 139,
+      "overview_printed": 339,
+      "comparison_pdf": 140,
+      "comparison_printed": 340
+    },
+    "source_sha256": "4914563fb5e8eab9e3cbbf0a416d93ec4ca6c3bc795a6dccb3cdd007faeb8f24",
+    "fresh_imports_tonnes": 0,
+    "fresh_imports_status": "explicit zero in overview diagram; comparison table dash was not converted",
+    "caveat": "Estimated supply pathways, not consumption. Processing is input volume sent to processing. The fresh-supply intermediate must not be counted again in production totals.",
+    "preparation": "Five quantities read from original comparison page; processing independently verified against decoded overview and existing visually inspected page; original diagram not reproduced."
+  },
+  "nodes": [
+    {
+      "id": "production",
+      "label": "Production",
+      "tonnes": 1493725
+    },
+    {
+      "id": "processing",
+      "label": "Sent to processing",
+      "tonnes": 990000
+    },
+    {
+      "id": "fresh_supply",
+      "label": "Fresh supply",
+      "tonnes": 453867
+    },
+    {
+      "id": "fresh_exports",
+      "label": "Fresh exports",
+      "tonnes": 49858
+    },
+    {
+      "id": "retail",
+      "label": "Retail supply",
+      "tonnes": 390423
+    },
+    {
+      "id": "food_service",
+      "label": "Food-service supply",
+      "tonnes": 63444
+    }
+  ],
+  "links": [
+    {
+      "source": "production",
+      "target": "processing",
+      "tonnes": 990000
+    },
+    {
+      "source": "production",
+      "target": "fresh_supply",
+      "tonnes": 453867
+    },
+    {
+      "source": "production",
+      "target": "fresh_exports",
+      "tonnes": 49858
+    },
+    {
+      "source": "fresh_supply",
+      "target": "retail",
+      "tonnes": 390423
+    },
+    {
+      "source": "fresh_supply",
+      "target": "food_service",
+      "tonnes": 63444
+    }
+  ],
+  "balances": {
+    "production_residual_tonnes": 0,
+    "fresh_supply_residual_tonnes": 0
+  }
+}
