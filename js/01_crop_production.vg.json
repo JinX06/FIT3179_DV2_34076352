@@ -1,0 +1,231 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Production of the 15 highest-production ABS crops in 2024–25. Shares use the total for all 33 crops.",
+  "width": "container",
+  "height": 366,
+  "background": null,
+  "padding": {
+    "left": 0,
+    "top": 5,
+    "right": 112,
+    "bottom": 6
+  },
+  "autosize": {
+    "type": "fit",
+    "contains": "padding",
+    "resize": true
+  },
+  "data": {
+    "url": "data/latest_crops.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "tonnes": "number",
+        "share_percent": "number",
+        "production_rank": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "filter": "datum.production_rank <= 15"
+    },
+    {
+      "calculate": "format(datum.tonnes, ',.0f') + ' t'",
+      "as": "production_display"
+    },
+    {
+      "calculate": "datum.share_percent < 0.1 ? '<0.1%' : format(datum.share_percent, '.1f') + '%'",
+      "as": "share_display"
+    },
+    {
+      "calculate": "datum.financial_year",
+      "as": "year_display"
+    }
+  ],
+  "encoding": {
+    "y": {
+      "field": "crop",
+      "type": "nominal",
+      "sort": {
+        "field": "tonnes",
+        "order": "descending"
+      },
+      "title": null,
+      "axis": {
+        "ticks": false,
+        "domain": false,
+        "labelFontSize": 14,
+        "labelColor": "#183247",
+        "labelLimit": 340,
+        "labelPadding": 12,
+        "labelExpr": "datum.label",
+        "grid": false
+      }
+    },
+    "x": {
+      "field": "tonnes",
+      "type": "quantitative",
+      "title": "Production (tonnes), 2024–25",
+      "scale": {
+        "domain": [
+          0,
+          1500000
+        ],
+        "nice": false,
+        "zero": true
+      },
+      "axis": {
+        "values": [
+          0,
+          500000,
+          1000000,
+          1500000
+        ],
+        "format": ".2s",
+        "labelFontSize": 14,
+        "titleFontSize": 14,
+        "labelExpr": "datum.value == 0 ? '0' : format(datum.value, '~s')",
+        "grid": true,
+        "gridColor": "#D5DED3",
+        "gridOpacity": 1,
+        "titlePadding": 12
+      }
+    },
+    "tooltip": [
+      {
+        "field": "crop",
+        "type": "nominal",
+        "title": "Crop"
+      },
+      {
+        "field": "year_display",
+        "type": "nominal",
+        "title": "Year"
+      },
+      {
+        "field": "production_display",
+        "type": "nominal",
+        "title": "Production"
+      },
+      {
+        "field": "share_display",
+        "type": "nominal",
+        "title": "Share of 33-crop total"
+      }
+    ]
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "rule",
+        "strokeWidth": 2
+      },
+      "encoding": {
+        "x2": {
+          "datum": 0
+        },
+        "color": {
+          "condition": {
+            "test": "datum.production_rank <= 3",
+            "value": "#3f7953"
+          },
+          "value": "#738f6c"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "shape": "circle",
+        "size": 68,
+        "opacity": 1,
+        "strokeWidth": 1.5
+      },
+      "encoding": {
+        "color": {
+          "condition": {
+            "test": "datum.production_rank <= 3",
+            "value": "#3f7953"
+          },
+          "value": "#738f6c"
+        },
+        "stroke": {
+          "condition": {
+            "param": "crop_hover",
+            "empty": false,
+            "value": "#183247"
+          },
+          "value": "#ffffff"
+        }
+      },
+      "params": [
+        {
+          "name": "crop_hover",
+          "select": {
+            "type": "point",
+            "fields": [
+              "crop"
+            ],
+            "on": "pointerover",
+            "clear": "pointerout"
+          }
+        }
+      ]
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 12,
+        "baseline": "middle",
+        "fontSize": 14,
+        "color": "#183247",
+        "fontWeight": {
+          "expr": "datum.production_rank <= 3 ? 700 : 400"
+        }
+      },
+      "encoding": {
+        "text": {
+          "field": "production_display"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "\"Source Sans 3\", Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "titleColor": "#526575",
+      "domain": false,
+      "tickColor": "#ced9df",
+      "gridColor": "#D5DED3",
+      "gridOpacity": 1,
+      "labelPadding": 6,
+      "titlePadding": 12,
+      "labelExpr": "datum.value === 0 ? '0' : datum.label"
+    },
+    "legend": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "titleColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "padding": 5
+    },
+    "text": {
+      "fontSize": 13,
+      "fontWeight": 400,
+      "color": "#183247"
+    }
+  }
+}

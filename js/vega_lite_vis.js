@@ -1,4 +1,9 @@
-var chartSpecs = [];
+var chartSpecs = [
+  {
+    "chartId": "crop-production",
+    "specification": "js/01_crop_production.vg.json"
+  }
+];
 
 var editorURL = "https://vega.github.io/editor/";
 var publishedDataURL = "https://jinx06.github.io/FIT3179_DV2_34076352/";

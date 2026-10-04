@@ -14,10 +14,28 @@
 </head>
 <body>
   <main class="page">
-    <header class="hero"><h1>Australia’s Vegetable Harvest</h1><p class="standfirst">Explore vegetable production in Australia.</p></header>
-    
+    <header class="hero">
+      <h1>Australia’s Vegetable Harvest</h1>
+      <p class="standfirst">An interactive visualisation of vegetable production in Australia, covering crop production.</p>
+      <p class="metric-context">All vegetables <span aria-hidden="true"> | </span> <span class="period">2024-25</span></p>
+      <dl class="headline-facts" aria-label="National figures for all vegetables in 2024-25">
+        <div><dt>Vegetable production</dt><dd>3.78 <span>million tonnes</span></dd><p class="stat-source">Hort Innovation</p></div>
+        <div><dt>Farm gate value</dt><dd>A$6.03 <span>billion</span></dd><p class="stat-source">Australian Bureau of Statistics (ABS)</p></div>
+      </dl>
+      <div class="hero-context">
+        <p>The national figures above cover <strong>all vegetables</strong>. Most charts below compare the <strong>33 crops in the ABS data</strong>.</p>
+        <p class="scope-note">Farm gate value is the value at first sale, before transport and marketing costs. Dollar values are not adjusted for inflation.</p>
+      </div>
+    </header>
 
-    
+    <section id="basket" class="story-section" aria-labelledby="section-1">
+      <div class="section-heading"><h2 id="section-1">The national harvest</h2></div>
+      <figure class="viz-block viz-panel" id="vis-1">
+        <figcaption><h3>Potatoes lead the harvest</h3><p>Potatoes, tomatoes and carrots account for 59.3% of production across the 33 ABS crops in 2024–25. The top 15 shown here account for 93.3% of that total.</p></figcaption>
+        <div id="crop-production" class="chart" aria-label="Ranked production of the top 15 of 33 ABS crops in 2024-25"></div>
+      </figure>
+      
+    </section>
 
     
 
