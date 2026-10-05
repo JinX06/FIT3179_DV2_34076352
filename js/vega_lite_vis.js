@@ -10,6 +10,14 @@ var chartSpecs = [
   {
     "chartId": "value-trend",
     "specification": "js/02b_value_trend.vg.json"
+  },
+  {
+    "chartId": "waterfall",
+    "specification": "js/03_waterfall.vg.json"
+  },
+  {
+    "chartId": "dumbbell",
+    "specification": "js/05_dumbbell.vg.json"
   }
 ];
 

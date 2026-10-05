@@ -1,0 +1,179 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 250,
+  "background": null,
+  "padding": 5,
+  "autosize": {
+    "type": "fit",
+    "contains": "padding",
+    "resize": true
+  },
+  "data": {
+    "url": "data/crop_endpoints.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "start_tonnes": "number",
+        "end_tonnes": "number",
+        "delta_tonnes": "number",
+        "change_percent": "number"
+      }
+    }
+  },
+  "encoding": {
+    "y": {
+      "field": "crop",
+      "type": "nominal",
+      "title": null,
+      "sort": [
+        "Tomatoes",
+        "Carrots",
+        "Cucumbers",
+        "Lettuce (head)"
+      ],
+      "axis": {
+        "labelExpr": "datum.label == 'Parsley and other fresh herbs excluding fennel' ? 'Fresh herbs' : datum.label == 'Lettuce (head)' ? 'Head lettuce' : datum.label",
+        "ticks": false,
+        "labelLimit": 120,
+        "grid": false
+      }
+    },
+    "x": {
+      "field": "start_tonnes",
+      "type": "quantitative",
+      "title": "Production (tonnes)",
+      "scale": {
+        "domain": [
+          0,
+          500000
+        ]
+      },
+      "axis": {
+        "format": ".2s",
+        "tickCount": 5
+      }
+    },
+    "tooltip": [
+      {
+        "field": "crop",
+        "title": "Crop",
+        "type": "nominal"
+      },
+      {
+        "field": "start_tonnes_display",
+        "title": "2020-21",
+        "type": "nominal"
+      },
+      {
+        "field": "end_tonnes_display",
+        "title": "2024-25",
+        "type": "nominal"
+      },
+      {
+        "field": "delta_tonnes_display",
+        "title": "Production change",
+        "type": "nominal"
+      },
+      {
+        "field": "change_percent_display",
+        "title": "Relative change",
+        "type": "nominal"
+      }
+    ]
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "rule",
+        "strokeWidth": 2,
+        "color": "#829681"
+      },
+      "encoding": {
+        "x2": {
+          "field": "end_tonnes"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "shape": "circle",
+        "size": 90,
+        "opacity": 1,
+        "color": "#758390"
+      }
+    },
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "shape": "circle",
+        "size": 90,
+        "opacity": 1,
+        "color": "#183247"
+      },
+      "encoding": {
+        "x": {
+          "field": "end_tonnes",
+          "type": "quantitative",
+          "title": null
+        }
+      }
+    }
+  ],
+  "transform": [
+    {
+      "calculate": "format(datum.delta_tonnes, '+,.0f') + ' t'",
+      "as": "delta_tonnes_display"
+    },
+    {
+      "calculate": "format(datum.start_tonnes, ',.0f') + ' t'",
+      "as": "start_tonnes_display"
+    },
+    {
+      "calculate": "format(datum.end_tonnes, ',.0f') + ' t'",
+      "as": "end_tonnes_display"
+    },
+    {
+      "calculate": "datum.change_percent == 0 ? '0.0%' : format(datum.change_percent, '+.1f') + '%'",
+      "as": "change_percent_display"
+    }
+  ],
+  "config": {
+    "font": "\"Source Sans 3\", Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "titleColor": "#526575",
+      "domain": false,
+      "tickColor": "#ced9df",
+      "gridColor": "#D5DED3",
+      "gridOpacity": 1,
+      "labelPadding": 6,
+      "titlePadding": 12,
+      "labelExpr": "datum.value === 0 ? '0' : datum.label"
+    },
+    "legend": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "titleColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "padding": 5
+    },
+    "text": {
+      "fontSize": 13,
+      "fontWeight": 400,
+      "color": "#183247"
+    }
+  }
+}

@@ -22,5 +22,7 @@ Built with HTML, CSS, JavaScript, Vega and Vega-Lite.
 - [Crop production lollipop](js/01_crop_production.vg.json)
 - [Production trend](js/02a_tonnes_trend.vg.json)
 - [Value trend](js/02b_value_trend.vg.json)
+- [Crop change waterfall](js/03_waterfall.vg.json)
+- [Crop comparison dots](js/05_dumbbell.vg.json)
 
 [Hand drawn sketch](submission/hand_drawn_sketch.pdf)

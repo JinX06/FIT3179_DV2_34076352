@@ -1,0 +1,305 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 310,
+  "background": null,
+  "padding": 5,
+  "autosize": {
+    "type": "fit",
+    "contains": "padding",
+    "resize": true
+  },
+  "data": {
+    "url": "data/waterfall_steps.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "order": "number",
+        "next_order": "number",
+        "delta": "number",
+        "cumulative_start": "number",
+        "cumulative_end": "number",
+        "absolute_start": "number",
+        "absolute_end": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "calculate": "datum.crop == 'Remaining crops' ? 'Other 25 crops (net)' : datum.kind == 'end' ? 'Overall change' : datum.crop == 'Lettuce (head)' ? 'Head lettuce' : datum.crop",
+      "as": "step_label"
+    }
+  ],
+  "encoding": {
+    "x": {
+      "field": "order",
+      "type": "quantitative",
+      "title": null,
+      "scale": {
+        "domain": [
+          -0.7,
+          10.7
+        ]
+      },
+      "axis": {
+        "labelAngle": 0,
+        "labelFontSize": 12,
+        "labelOverlap": false,
+        "labelLimit": 82,
+        "grid": false,
+        "values": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "minExtent": {
+          "expr": "width >= 400 && width < 840 ? 40 : 0"
+        },
+        "labelExpr": "datum.value == 3 && width >= 400 && width < 700 ? ['Head', 'lettuce'] : ['Start', 'Potatoes', 'Cucumbers', 'Head lettuce', 'Tomatoes', 'Carrots', 'Onions', 'Mushrooms', 'Peas', 'Other 25', 'Net change'][datum.value]"
+      }
+    }
+  },
+  "layer": [
+    {
+      "data": {
+        "values": [
+          {
+            "zero": 0
+          }
+        ]
+      },
+      "mark": {
+        "type": "rule",
+        "color": "#9ea99e",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "x": {
+          "value": 0
+        },
+        "x2": {
+          "value": {
+            "expr": "width"
+          }
+        },
+        "y": {
+          "field": "zero",
+          "type": "quantitative",
+          "title": "Running change (tonnes)",
+          "scale": {
+            "domain": [
+              -60000,
+              95000
+            ]
+          },
+          "axis": {
+            "format": "+.2s",
+            "tickCount": 5
+          }
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.kind != 'start'"
+        },
+        {
+          "calculate": "format(datum.delta, '+,.0f') + ' t'",
+          "as": "delta_display"
+        },
+        {
+          "calculate": "format(datum.cumulative_end, '+,.0f') + ' t'",
+          "as": "cumulative_end_display"
+        },
+        {
+          "calculate": "format(datum.absolute_end, ',.0f') + ' t'",
+          "as": "absolute_end_display"
+        }
+      ],
+      "mark": {
+        "type": "bar",
+        "size": {
+          "expr": "max(8, width / 17)"
+        }
+      },
+      "encoding": {
+        "y": {
+          "field": "cumulative_end",
+          "type": "quantitative",
+          "title": "Running change (tonnes)",
+          "scale": {
+            "domain": [
+              -60000,
+              95000
+            ]
+          },
+          "axis": {
+            "format": "+.2s",
+            "tickCount": 5
+          }
+        },
+        "y2": {
+          "field": "cumulative_start"
+        },
+        "color": {
+          "condition": [
+            {
+              "test": "datum.kind == 'increase'",
+              "value": "#24734b"
+            },
+            {
+              "test": "datum.kind == 'decrease'",
+              "value": "#725382"
+            }
+          ],
+          "value": "#183247"
+        },
+        "tooltip": [
+          {
+            "field": "step_label",
+            "title": "Step",
+            "type": "nominal"
+          },
+          {
+            "field": "delta_display",
+            "title": "Contribution",
+            "type": "nominal"
+          },
+          {
+            "field": "cumulative_end_display",
+            "title": "Net so far",
+            "type": "nominal"
+          },
+          {
+            "field": "absolute_end_display",
+            "title": "Running total",
+            "type": "nominal"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.kind != 'end'"
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "strokeDash": [
+          2,
+          2
+        ],
+        "color": "#8c9c8e"
+      },
+      "encoding": {
+        "x2": {
+          "field": "next_order"
+        },
+        "y": {
+          "field": "cumulative_end",
+          "type": "quantitative",
+          "title": "Running change (tonnes)"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.kind == 'start'"
+        },
+        {
+          "calculate": "format(datum.absolute_end, ',.0f') + ' t'",
+          "as": "absolute_end_display"
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 70,
+        "color": "#183247"
+      },
+      "encoding": {
+        "y": {
+          "field": "cumulative_end",
+          "type": "quantitative",
+          "title": "Running change (tonnes)"
+        },
+        "tooltip": [
+          {
+            "field": "absolute_end_display",
+            "title": "Starting production",
+            "type": "nominal"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.kind == 'end'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "dy": 16,
+        "fontWeight": 700,
+        "color": "#183247"
+      },
+      "encoding": {
+        "y": {
+          "field": "cumulative_end",
+          "type": "quantitative",
+          "title": "Running change (tonnes)"
+        },
+        "text": {
+          "value": "-46,805 t"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "\"Source Sans 3\", Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "titleColor": "#526575",
+      "domain": false,
+      "tickColor": "#ced9df",
+      "gridColor": "#D5DED3",
+      "gridOpacity": 1,
+      "labelPadding": 6,
+      "titlePadding": 12,
+      "labelExpr": "datum.value === 0 ? '0' : datum.label"
+    },
+    "legend": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "titleColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "padding": 5
+    },
+    "text": {
+      "fontSize": 13,
+      "fontWeight": 400,
+      "color": "#183247"
+    }
+  }
+}
