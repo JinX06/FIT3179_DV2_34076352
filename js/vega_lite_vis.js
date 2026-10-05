@@ -2,6 +2,14 @@ var chartSpecs = [
   {
     "chartId": "crop-production",
     "specification": "js/01_crop_production.vg.json"
+  },
+  {
+    "chartId": "tonnes-trend",
+    "specification": "js/02a_tonnes_trend.vg.json"
+  },
+  {
+    "chartId": "value-trend",
+    "specification": "js/02b_value_trend.vg.json"
   }
 ];
 

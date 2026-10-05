@@ -16,7 +16,7 @@
   <main class="page">
     <header class="hero">
       <h1>Australia’s Vegetable Harvest</h1>
-      <p class="standfirst">An interactive visualisation of vegetable production in Australia, covering crop production.</p>
+      <p class="standfirst">An interactive visualisation of vegetable production in Australia, covering crop production and changes over time.</p>
       <p class="metric-context">All vegetables <span aria-hidden="true"> | </span> <span class="period">2024-25</span></p>
       <dl class="headline-facts" aria-label="National figures for all vegetables in 2024-25">
         <div><dt>Vegetable production</dt><dd>3.78 <span>million tonnes</span></dd><p class="stat-source">Hort Innovation</p></div>
@@ -34,7 +34,11 @@
         <figcaption><h3>Potatoes lead the harvest</h3><p>Potatoes, tomatoes and carrots account for 59.3% of production across the 33 ABS crops in 2024–25. The top 15 shown here account for 93.3% of that total.</p></figcaption>
         <div id="crop-production" class="chart" aria-label="Ranked production of the top 15 of 33 ABS crops in 2024-25"></div>
       </figure>
-      
+      <figure class="viz-block viz-panel" id="vis-2">
+        <figcaption><h3>The harvest barely changed as its dollar value rose</h3><p>The same 33 crops over five financial years, from 2020-21 to 2024-25. Each year ends in June.</p></figcaption>
+        <p class="finding trend-takeaway">Production was about <strong>1.2% lower</strong> at the end of the period, while farm gate value was <strong>23% higher</strong>. The value increase does not account for inflation.</p>
+        <div class="trend-panels"><div><p class="panel-label">Production, million tonnes</p><div id="tonnes-trend" class="chart"></div></div><div><p class="panel-label value">Farm gate value, A$ billion</p><div id="value-trend" class="chart"></div></div></div>
+      </figure>
     </section>
 
     

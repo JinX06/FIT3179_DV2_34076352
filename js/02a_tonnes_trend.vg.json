@@ -1,0 +1,142 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 240,
+  "background": null,
+  "padding": 5,
+  "autosize": {
+    "type": "fit",
+    "contains": "padding",
+    "resize": true
+  },
+  "data": {
+    "url": "data/listed_trends.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "year_order": "number",
+        "tonnes": "number",
+        "value_aud_m": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "calculate": "datum.tonnes / 1000000",
+      "as": "million_tonnes"
+    },
+    {
+      "calculate": "(datum.tonnes / 3805325 - 1) * 100",
+      "as": "endpoint_change_percent"
+    },
+    {
+      "calculate": "slice(datum.financial_year, 0, 4) + '-' + slice(datum.financial_year, 5)",
+      "as": "financial_year_display"
+    },
+    {
+      "calculate": "format(datum.tonnes, ',.0f') + ' t'",
+      "as": "tonnes_display"
+    },
+    {
+      "calculate": "datum.endpoint_change_percent == 0 ? '0.00%' : format(datum.endpoint_change_percent, '+.2f') + '%'",
+      "as": "endpoint_change_percent_display"
+    }
+  ],
+  "mark": {
+    "type": "line",
+    "point": {
+      "filled": true,
+      "size": 42,
+      "color": "#24734b"
+    },
+    "strokeWidth": 2.5,
+    "color": "#24734b"
+  },
+  "encoding": {
+    "x": {
+      "field": "financial_year_display",
+      "type": "nominal",
+      "title": null,
+      "sort": [
+        "2020-21",
+        "2021-22",
+        "2022-23",
+        "2023-24",
+        "2024-25"
+      ],
+      "axis": {
+        "labelExpr": "slice(datum.label, 2)",
+        "labelAngle": 0,
+        "grid": false
+      }
+    },
+    "y": {
+      "field": "million_tonnes",
+      "type": "quantitative",
+      "title": null,
+      "scale": {
+        "domain": [
+          3.4,
+          3.9
+        ],
+        "zero": false
+      },
+      "axis": {
+        "format": ".1f",
+        "tickCount": 4
+      }
+    },
+    "tooltip": [
+      {
+        "field": "financial_year_display",
+        "title": "Year",
+        "type": "nominal"
+      },
+      {
+        "field": "tonnes_display",
+        "title": "Production",
+        "type": "nominal"
+      },
+      {
+        "field": "endpoint_change_percent_display",
+        "title": "Change since 2020-21",
+        "type": "nominal"
+      }
+    ]
+  },
+  "config": {
+    "font": "\"Source Sans 3\", Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "titleColor": "#526575",
+      "domain": false,
+      "tickColor": "#ced9df",
+      "gridColor": "#D5DED3",
+      "gridOpacity": 1,
+      "labelPadding": 6,
+      "titlePadding": 12,
+      "labelExpr": "datum.value === 0 ? '0' : datum.label"
+    },
+    "legend": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "titleColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "padding": 5
+    },
+    "text": {
+      "fontSize": 13,
+      "fontWeight": 400,
+      "color": "#183247"
+    }
+  }
+}
