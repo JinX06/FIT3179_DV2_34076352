@@ -22,6 +22,14 @@ var chartSpecs = [
   {
     "chartId": "heatmap",
     "specification": "js/04_heatmap.vg.json"
+  },
+  {
+    "chartId": "choropleth",
+    "specification": "js/07_choropleth.vg.json"
+  },
+  {
+    "chartId": "symbols",
+    "specification": "js/08_symbols.vg.json"
   }
 ];
 

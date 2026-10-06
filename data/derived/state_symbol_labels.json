@@ -1,0 +1,138 @@
+[
+  {
+    "state_code": "1",
+    "state": "New South Wales",
+    "longitude": 146.34633817319246,
+    "latitude": -32.831025665133396,
+    "point_geometry": {
+      "type": "Point",
+      "coordinates": [
+        146.34633817319246,
+        -32.831025665133396
+      ]
+    },
+    "neighbour_code": "8",
+    "neighbour_distance": 0.059365411796459704,
+    "away_x": -0.03433593317241307,
+    "away_y": -0.04842825426280428
+  },
+  {
+    "state_code": "2",
+    "state": "Victoria",
+    "longitude": 144.54971313318566,
+    "latitude": -36.55869494202574,
+    "point_geometry": {
+      "type": "Point",
+      "coordinates": [
+        144.54971313318566,
+        -36.55869494202574
+      ]
+    },
+    "neighbour_code": "8",
+    "neighbour_distance": 0.06729819172926907,
+    "away_x": -0.065763645737698,
+    "away_y": 0.014289489470097116
+  },
+  {
+    "state_code": "3",
+    "state": "Queensland",
+    "longitude": 145.77340849533007,
+    "latitude": -22.9570131660358,
+    "point_geometry": {
+      "type": "Point",
+      "coordinates": [
+        145.77340849533007,
+        -22.9570131660358
+      ]
+    },
+    "neighbour_code": "1",
+    "neighbour_distance": 0.17447349977667823,
+    "away_x": 0.007731444538043836,
+    "away_y": -0.17430211384167915
+  },
+  {
+    "state_code": "4",
+    "state": "South Australia",
+    "longitude": 136.94852990579054,
+    "latitude": -32.02893973697899,
+    "point_geometry": {
+      "type": "Point",
+      "coordinates": [
+        136.94852990579054,
+        -32.02893973697899
+      ]
+    },
+    "neighbour_code": "2",
+    "neighbour_distance": 0.134906077912506,
+    "away_x": -0.10475271476318307,
+    "away_y": -0.08500893251581476
+  },
+  {
+    "state_code": "5",
+    "state": "Western Australia",
+    "longitude": 121.20179736049653,
+    "latitude": -24.43781424076065,
+    "point_geometry": {
+      "type": "Point",
+      "coordinates": [
+        121.20179736049653,
+        -24.43781424076065
+      ]
+    },
+    "neighbour_code": "7",
+    "neighbour_distance": 0.22054953669162022,
+    "away_x": -0.19253217823725072,
+    "away_y": 0.10758000965842984
+  },
+  {
+    "state_code": "6",
+    "state": "Tasmania",
+    "longitude": 146.67252729013182,
+    "latitude": -42.142340449588495,
+    "point_geometry": {
+      "type": "Point",
+      "coordinates": [
+        146.67252729013182,
+        -42.142340449588495
+      ]
+    },
+    "neighbour_code": "2",
+    "neighbour_distance": 0.10047216103395032,
+    "away_x": 0.020164305317156017,
+    "away_y": 0.09842792253171129
+  },
+  {
+    "state_code": "7",
+    "state": "Northern Territory",
+    "longitude": 133.4997461666253,
+    "latitude": -18.89041750615336,
+    "point_geometry": {
+      "type": "Point",
+      "coordinates": [
+        133.4997461666253,
+        -18.89041750615336
+      ]
+    },
+    "neighbour_code": "3",
+    "neighbour_distance": 0.21114603211674113,
+    "away_x": -0.19539138291236866,
+    "away_y": -0.08003033401302284
+  },
+  {
+    "state_code": "8",
+    "state": "Australian Capital Territory",
+    "longitude": 149.08103856959775,
+    "latitude": -35.366727240648395,
+    "point_geometry": {
+      "type": "Point",
+      "coordinates": [
+        149.08103856959775,
+        -35.366727240648395
+      ]
+    },
+    "neighbour_code": "1",
+    "neighbour_distance": 0.059365411796459704,
+    "away_x": 0.03433593317241307,
+    "away_y": 0.04842825426280428
+  }
+]

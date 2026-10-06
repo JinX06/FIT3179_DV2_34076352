@@ -1,0 +1,491 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 560,
+  "background": null,
+  "padding": 5,
+  "autosize": {
+    "type": "fit",
+    "contains": "padding",
+    "resize": true
+  },
+  "projection": {
+    "type": "conicEqualArea",
+    "rotate": [
+      -134,
+      0,
+      0
+    ],
+    "center": [
+      0,
+      -28
+    ],
+    "parallels": [
+      -18,
+      -36
+    ]
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "data/geo/aus_states_2026.topojson",
+        "format": {
+          "type": "topojson",
+          "feature": "states"
+        }
+      },
+      "transform": [
+        {
+          "lookup": "properties.state_code",
+          "from": {
+            "data": {
+              "url": "data/state_carrots.csv",
+              "format": {
+                "type": "csv",
+                "parse": {
+                  "tonnes": "number",
+                  "share_percent": "number"
+                }
+              }
+            },
+            "key": "state_code",
+            "fields": [
+              "state",
+              "tonnes",
+              "share_percent",
+              "status"
+            ]
+          }
+        },
+        {
+          "calculate": "datum.status == 'missing' ? 'Not reported' : 'Reported'",
+          "as": "status_display"
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "fill": "#bec6cc",
+        "strokeWidth": 1.2
+      },
+      "encoding": {
+        "stroke": {
+          "condition": {
+            "param": "carrot_hover",
+            "empty": false,
+            "value": "#183247"
+          },
+          "value": "#ffffff"
+        },
+        "tooltip": [
+          {
+            "field": "state",
+            "title": "State",
+            "type": "nominal"
+          },
+          {
+            "field": "status_display",
+            "title": "Production",
+            "type": "nominal"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "data/geo/aus_states_2026.topojson",
+        "format": {
+          "type": "topojson",
+          "feature": "states"
+        }
+      },
+      "transform": [
+        {
+          "lookup": "properties.state_code",
+          "from": {
+            "data": {
+              "url": "data/state_carrots.csv",
+              "format": {
+                "type": "csv",
+                "parse": {
+                  "tonnes": "number",
+                  "share_percent": "number"
+                }
+              }
+            },
+            "key": "state_code",
+            "fields": [
+              "state",
+              "tonnes",
+              "share_percent",
+              "status"
+            ]
+          }
+        },
+        {
+          "filter": "datum.status != 'missing'"
+        },
+        {
+          "calculate": "isValid(datum.tonnes) ? format(datum.tonnes, ',.0f') + ' t' : 'Not reported'",
+          "as": "tonnes_display"
+        },
+        {
+          "calculate": "!isValid(datum.share_percent) ? 'Not reported' : datum.share_percent > 0 && datum.share_percent < 0.1 ? '<0.1%' : datum.share_percent == 0 ? '0%' : format(datum.share_percent, '.1f') + '%'",
+          "as": "share_percent_display"
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "strokeWidth": 1.2
+      },
+      "encoding": {
+        "stroke": {
+          "condition": {
+            "param": "carrot_hover",
+            "empty": false,
+            "value": "#183247"
+          },
+          "value": "#ffffff"
+        },
+        "color": {
+          "field": "share_percent",
+          "type": "quantitative",
+          "title": "Share of national carrots (%)",
+          "scale": {
+            "domain": [
+              0,
+              40
+            ],
+            "range": [
+              "#eef0b2",
+              "#176443"
+            ]
+          },
+          "legend": {
+            "orient": "bottom",
+            "direction": "horizontal",
+            "gradientLength": 260,
+            "values": [
+              0,
+              10,
+              20,
+              30,
+              40
+            ]
+          }
+        },
+        "tooltip": [
+          {
+            "field": "state",
+            "title": "State",
+            "type": "nominal"
+          },
+          {
+            "field": "tonnes_display",
+            "title": "Carrots",
+            "type": "nominal"
+          },
+          {
+            "field": "share_percent_display",
+            "title": "National share",
+            "type": "nominal"
+          }
+        ]
+      },
+      "params": [
+        {
+          "name": "carrot_hover",
+          "select": {
+            "type": "point",
+            "fields": [
+              "state"
+            ],
+            "on": "pointerover",
+            "clear": "pointerout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "carrot_labels",
+      "data": {
+        "url": "data/derived/state_label_regions.json",
+        "format": {
+          "type": "json"
+        }
+      },
+      "transform": [
+        {
+          "lookup": "state_code",
+          "from": {
+            "data": {
+              "url": "data/state_carrots.csv",
+              "format": {
+                "type": "csv",
+                "parse": {
+                  "tonnes": "number",
+                  "share_percent": "number"
+                }
+              }
+            },
+            "key": "state_code",
+            "fields": [
+              "state",
+              "tonnes",
+              "share_percent",
+              "status"
+            ]
+          }
+        },
+        {
+          "calculate": "geoCentroid('projection', datum.label_geometry)",
+          "as": "position"
+        },
+        {
+          "calculate": "geoBounds('projection', datum.fit_geometry)",
+          "as": "fit_bounds"
+        },
+        {
+          "calculate": "length(split(datum.state, ' ')) == 1 ? datum.state : join(slice(split(datum.state, ' '),0,ceil(length(split(datum.state, ' '))/2)), ' ')+'\\n'+join(slice(split(datum.state, ' '),ceil(length(split(datum.state, ' '))/2)), ' ')",
+          "as": "full_label"
+        },
+        {
+          "calculate": "split(datum.full_label, '\\n')",
+          "as": "full_lines"
+        },
+        {
+          "calculate": "max(length(datum.full_lines[0]),length(datum.full_lines[1] || ''))*7.2",
+          "as": "name_width"
+        },
+        {
+          "calculate": "width >= 420 && datum.name_width+8 <= datum.fit_bounds[1][0]-datum.fit_bounds[0][0] && length(datum.full_lines)*16+8 <= datum.fit_bounds[1][1]-datum.fit_bounds[0][1] ? datum.full_label : (datum.state_code == '1' ? 'NSW' : datum.state_code == '2' ? 'VIC' : datum.state_code == '3' ? 'QLD' : datum.state_code == '4' ? 'SA' : datum.state_code == '5' ? 'WA' : datum.state_code == '6' ? 'TAS' : datum.state_code == '7' ? 'NT' : 'ACT')",
+          "as": "label"
+        },
+        {
+          "calculate": "datum.position[0]",
+          "as": "label_x"
+        },
+        {
+          "calculate": "datum.position[1]",
+          "as": "label_y"
+        },
+        {
+          "filter": "datum.status != 'missing'"
+        },
+        {
+          "calculate": "isValid(datum.tonnes) ? format(datum.tonnes, ',.0f') + ' t' : 'Not reported'",
+          "as": "tonnes_display"
+        },
+        {
+          "calculate": "!isValid(datum.share_percent) ? 'Not reported' : datum.share_percent > 0 && datum.share_percent < 0.1 ? '<0.1%' : datum.share_percent == 0 ? '0%' : format(datum.share_percent, '.1f') + '%'",
+          "as": "share_percent_display"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 14,
+        "fontWeight": 700,
+        "lineBreak": "\n",
+        "lineHeight": 16,
+        "align": "center",
+        "baseline": "middle",
+        "dy": {
+          "expr": "-(length(split(datum.label, '\\n'))-1)*8"
+        }
+      },
+      "encoding": {
+        "x": {
+          "field": "label_x",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "y": {
+          "field": "label_y",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "text": {
+          "field": "label"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.share_percent > 25",
+            "value": "#ffffff"
+          },
+          "value": "#183247"
+        },
+        "tooltip": [
+          {
+            "field": "state",
+            "title": "State",
+            "type": "nominal"
+          },
+          {
+            "field": "tonnes_display",
+            "title": "Carrots",
+            "type": "nominal"
+          },
+          {
+            "field": "share_percent_display",
+            "title": "National share",
+            "type": "nominal"
+          }
+        ]
+      }
+    },
+    {
+      "name": "carrot_missing_labels",
+      "data": {
+        "url": "data/derived/state_label_regions.json",
+        "format": {
+          "type": "json"
+        }
+      },
+      "transform": [
+        {
+          "lookup": "state_code",
+          "from": {
+            "data": {
+              "url": "data/state_carrots.csv",
+              "format": {
+                "type": "csv",
+                "parse": {
+                  "tonnes": "number",
+                  "share_percent": "number"
+                }
+              }
+            },
+            "key": "state_code",
+            "fields": [
+              "state",
+              "tonnes",
+              "share_percent",
+              "status"
+            ]
+          }
+        },
+        {
+          "calculate": "geoCentroid('projection', datum.label_geometry)",
+          "as": "position"
+        },
+        {
+          "calculate": "geoBounds('projection', datum.fit_geometry)",
+          "as": "fit_bounds"
+        },
+        {
+          "calculate": "length(split(datum.state, ' ')) == 1 ? datum.state : join(slice(split(datum.state, ' '),0,ceil(length(split(datum.state, ' '))/2)), ' ')+'\\n'+join(slice(split(datum.state, ' '),ceil(length(split(datum.state, ' '))/2)), ' ')",
+          "as": "full_label"
+        },
+        {
+          "calculate": "split(datum.full_label, '\\n')",
+          "as": "full_lines"
+        },
+        {
+          "calculate": "max(length(datum.full_lines[0]),length(datum.full_lines[1] || ''))*7.2",
+          "as": "name_width"
+        },
+        {
+          "calculate": "width >= 420 && datum.name_width+8 <= datum.fit_bounds[1][0]-datum.fit_bounds[0][0] && length(datum.full_lines)*16+8 <= datum.fit_bounds[1][1]-datum.fit_bounds[0][1] ? datum.full_label : (datum.state_code == '1' ? 'NSW' : datum.state_code == '2' ? 'VIC' : datum.state_code == '3' ? 'QLD' : datum.state_code == '4' ? 'SA' : datum.state_code == '5' ? 'WA' : datum.state_code == '6' ? 'TAS' : datum.state_code == '7' ? 'NT' : 'ACT')",
+          "as": "label"
+        },
+        {
+          "calculate": "datum.position[0]",
+          "as": "label_x"
+        },
+        {
+          "calculate": "datum.position[1]",
+          "as": "label_y"
+        },
+        {
+          "filter": "datum.status == 'missing'"
+        },
+        {
+          "calculate": "datum.status == 'missing' ? 'Not reported' : 'Reported'",
+          "as": "status_display"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 14,
+        "fontWeight": 700,
+        "lineBreak": "\n",
+        "lineHeight": 16,
+        "align": "center",
+        "baseline": "middle",
+        "dy": {
+          "expr": "-(length(split(datum.label, '\\n'))-1)*8"
+        },
+        "color": "#183247"
+      },
+      "encoding": {
+        "x": {
+          "field": "label_x",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "y": {
+          "field": "label_y",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "text": {
+          "field": "label"
+        },
+        "tooltip": [
+          {
+            "field": "state",
+            "title": "State",
+            "type": "nominal"
+          },
+          {
+            "field": "status_display",
+            "title": "Production",
+            "type": "nominal"
+          }
+        ]
+      }
+    }
+  ],
+  "config": {
+    "font": "\"Source Sans 3\", Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "titleColor": "#526575",
+      "domain": false,
+      "tickColor": "#ced9df",
+      "gridColor": "#dce5ea",
+      "gridOpacity": 0.65,
+      "labelPadding": 6,
+      "titlePadding": 12,
+      "labelExpr": "datum.value === 0 ? '0' : datum.label"
+    },
+    "legend": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "titleColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "padding": 5
+    },
+    "text": {
+      "fontSize": 13,
+      "fontWeight": 400,
+      "color": "#183247"
+    }
+  }
+}

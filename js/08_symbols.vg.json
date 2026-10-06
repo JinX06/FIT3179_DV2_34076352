@@ -1,0 +1,526 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 560,
+  "background": null,
+  "padding": {
+    "left": 5,
+    "right": 5,
+    "top": 5,
+    "bottom": 24
+  },
+  "autosize": {
+    "type": "fit",
+    "contains": "padding",
+    "resize": true
+  },
+  "projection": {
+    "type": "conicEqualArea",
+    "rotate": [
+      -134,
+      0,
+      0
+    ],
+    "center": [
+      0,
+      -28
+    ],
+    "parallels": [
+      -18,
+      -36
+    ]
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "data/geo/aus_states_2026.topojson",
+        "format": {
+          "type": "topojson",
+          "feature": "states"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": "#d4ded8",
+        "stroke": "#7F9488",
+        "strokeWidth": 1
+      }
+    },
+    {
+      "data": {
+        "url": "data/geo/aus_state_points.csv",
+        "format": {
+          "type": "csv",
+          "parse": {
+            "longitude": "number",
+            "latitude": "number"
+          }
+        }
+      },
+      "transform": [
+        {
+          "lookup": "state_code",
+          "from": {
+            "data": {
+              "url": "data/state_totals.csv",
+              "format": {
+                "type": "csv",
+                "parse": {
+                  "tonnes": "number",
+                  "reported_crops": "number",
+                  "missing_crops": "number"
+                }
+              }
+            },
+            "key": "state_code",
+            "fields": [
+              "state",
+              "tonnes",
+              "reported_crops",
+              "missing_crops",
+              "status"
+            ]
+          }
+        },
+        {
+          "filter": "datum.status != 'missing'"
+        },
+        {
+          "calculate": "isValid(datum.tonnes) ? format(datum.tonnes, ',.0f') + ' t' : 'Not reported'",
+          "as": "tonnes_display"
+        },
+        {
+          "calculate": "format(datum.reported_crops, '.0f') + ' of 33 crops reported'",
+          "as": "state_coverage_display"
+        }
+      ],
+      "mark": {
+        "type": "circle",
+        "color": "#416f86",
+        "opacity": 0.82,
+        "strokeWidth": 1.2
+      },
+      "encoding": {
+        "longitude": {
+          "field": "longitude",
+          "type": "quantitative",
+          "title": null
+        },
+        "latitude": {
+          "field": "latitude",
+          "type": "quantitative",
+          "title": null
+        },
+        "stroke": {
+          "condition": [
+            {
+              "param": "symbol_hover",
+              "empty": false,
+              "value": "#183247"
+            },
+            {
+              "test": "datum.state_code == '7'",
+              "value": "#183247"
+            }
+          ],
+          "value": "#ffffff"
+        },
+        "size": {
+          "field": "tonnes",
+          "type": "quantitative",
+          "title": "Reported tonnes, circle area",
+          "scale": {
+            "type": "linear",
+            "domain": [
+              0,
+              1000000
+            ],
+            "range": [
+              0,
+              {
+                "expr": "width < 420 ? 2200 : 4500"
+              }
+            ]
+          },
+          "legend": {
+            "orient": "bottom",
+            "direction": "horizontal",
+            "values": [
+              100000,
+              300000,
+              500000
+            ],
+            "columnPadding": 26,
+            "format": ".2s",
+            "symbolFillColor": "#416f86",
+            "symbolOpacity": 0.82
+          }
+        },
+        "tooltip": [
+          {
+            "field": "state",
+            "title": "State",
+            "type": "nominal"
+          },
+          {
+            "field": "tonnes_display",
+            "title": "Reported production",
+            "type": "nominal"
+          },
+          {
+            "field": "state_coverage_display",
+            "title": "Coverage",
+            "type": "nominal"
+          }
+        ]
+      },
+      "params": [
+        {
+          "name": "symbol_hover",
+          "select": {
+            "type": "point",
+            "fields": [
+              "state"
+            ],
+            "on": "pointerover",
+            "clear": "pointerout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "symbol_labels",
+      "data": {
+        "url": "data/derived/state_symbol_labels.json",
+        "format": {
+          "type": "json"
+        }
+      },
+      "transform": [
+        {
+          "lookup": "state_code",
+          "from": {
+            "data": {
+              "url": "data/state_totals.csv",
+              "format": {
+                "type": "csv",
+                "parse": {
+                  "tonnes": "number",
+                  "reported_crops": "number",
+                  "missing_crops": "number"
+                }
+              }
+            },
+            "key": "state_code",
+            "fields": [
+              "state",
+              "tonnes",
+              "reported_crops",
+              "missing_crops",
+              "status"
+            ]
+          }
+        },
+        {
+          "lookup": "neighbour_code",
+          "from": {
+            "data": {
+              "url": "data/state_totals.csv",
+              "format": {
+                "type": "csv",
+                "parse": {
+                  "tonnes": "number"
+                }
+              }
+            },
+            "key": "state_code",
+            "fields": [
+              "tonnes"
+            ]
+          },
+          "as": [
+            "neighbour_tonnes"
+          ]
+        },
+        {
+          "calculate": "geoCentroid('projection',datum.point_geometry)",
+          "as": "position"
+        },
+        {
+          "calculate": "isValid(datum.tonnes) ? sqrt(scale('size',datum.tonnes))/2 : 0",
+          "as": "radius"
+        },
+        {
+          "calculate": "isValid(datum.neighbour_tonnes) ? sqrt(scale('size',datum.neighbour_tonnes))/2 : 0",
+          "as": "neighbour_radius"
+        },
+        {
+          "calculate": "datum.neighbour_distance*geoScale('projection') < datum.radius+datum.neighbour_radius+100",
+          "as": "crowded"
+        },
+        {
+          "calculate": "datum.crowded || width < 420 ? (datum.state_code == '1' ? 'NSW' : datum.state_code == '2' ? 'VIC' : datum.state_code == '3' ? 'QLD' : datum.state_code == '4' ? 'SA' : datum.state_code == '5' ? 'WA' : datum.state_code == '6' ? 'TAS' : datum.state_code == '7' ? 'NT' : 'ACT') : (length(split(datum.state, ' ')) == 1 ? datum.state : join(slice(split(datum.state, ' '),0,ceil(length(split(datum.state, ' '))/2)), ' ')+'\\n'+join(slice(split(datum.state, ' '),ceil(length(split(datum.state, ' '))/2)), ' '))",
+          "as": "label"
+        },
+        {
+          "calculate": "length(split(datum.label,'\\n'))",
+          "as": "line_count"
+        },
+        {
+          "calculate": "datum.crowded ? abs(datum.away_x) >= abs(datum.away_y) ? datum.away_x < 0 ? 'left' : 'right' : datum.away_y < 0 ? 'above' : 'below' : 'above'",
+          "as": "label_side"
+        },
+        {
+          "calculate": "datum.position[0]+(datum.label_side == 'left' ? -datum.radius-8 : datum.label_side == 'right' ? datum.radius+8 : 0)",
+          "as": "label_x"
+        },
+        {
+          "calculate": "datum.position[1]+(datum.label_side == 'above' ? -datum.radius-8-datum.line_count*8 : datum.label_side == 'below' ? datum.radius+8+datum.line_count*8 : 0)",
+          "as": "label_y"
+        },
+        {
+          "filter": "datum.status != 'missing'"
+        },
+        {
+          "calculate": "isValid(datum.tonnes) ? format(datum.tonnes, ',.0f') + ' t' : 'Not reported'",
+          "as": "tonnes_display"
+        },
+        {
+          "calculate": "format(datum.reported_crops, '.0f') + ' of 33 crops reported'",
+          "as": "state_coverage_display"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 14,
+        "fontWeight": 700,
+        "color": "#183247",
+        "lineBreak": "\n",
+        "lineHeight": 16,
+        "align": {
+          "expr": "datum.label_side == 'left' ? 'right' : datum.label_side == 'right' ? 'left' : 'center'"
+        },
+        "baseline": "middle",
+        "dy": {
+          "expr": "-(datum.line_count-1)*8"
+        }
+      },
+      "encoding": {
+        "x": {
+          "field": "label_x",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "y": {
+          "field": "label_y",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "text": {
+          "field": "label"
+        },
+        "tooltip": [
+          {
+            "field": "state",
+            "title": "State",
+            "type": "nominal"
+          },
+          {
+            "field": "tonnes_display",
+            "title": "Reported production",
+            "type": "nominal"
+          },
+          {
+            "field": "state_coverage_display",
+            "title": "Coverage",
+            "type": "nominal"
+          }
+        ]
+      }
+    },
+    {
+      "name": "symbol_missing_labels",
+      "data": {
+        "url": "data/derived/state_symbol_labels.json",
+        "format": {
+          "type": "json"
+        }
+      },
+      "transform": [
+        {
+          "lookup": "state_code",
+          "from": {
+            "data": {
+              "url": "data/state_totals.csv",
+              "format": {
+                "type": "csv",
+                "parse": {
+                  "tonnes": "number",
+                  "reported_crops": "number",
+                  "missing_crops": "number"
+                }
+              }
+            },
+            "key": "state_code",
+            "fields": [
+              "state",
+              "tonnes",
+              "reported_crops",
+              "missing_crops",
+              "status"
+            ]
+          }
+        },
+        {
+          "lookup": "neighbour_code",
+          "from": {
+            "data": {
+              "url": "data/state_totals.csv",
+              "format": {
+                "type": "csv",
+                "parse": {
+                  "tonnes": "number"
+                }
+              }
+            },
+            "key": "state_code",
+            "fields": [
+              "tonnes"
+            ]
+          },
+          "as": [
+            "neighbour_tonnes"
+          ]
+        },
+        {
+          "calculate": "geoCentroid('projection',datum.point_geometry)",
+          "as": "position"
+        },
+        {
+          "calculate": "isValid(datum.tonnes) ? sqrt(scale('size',datum.tonnes))/2 : 0",
+          "as": "radius"
+        },
+        {
+          "calculate": "isValid(datum.neighbour_tonnes) ? sqrt(scale('size',datum.neighbour_tonnes))/2 : 0",
+          "as": "neighbour_radius"
+        },
+        {
+          "calculate": "datum.neighbour_distance*geoScale('projection') < datum.radius+datum.neighbour_radius+100",
+          "as": "crowded"
+        },
+        {
+          "calculate": "datum.crowded || width < 420 ? (datum.state_code == '1' ? 'NSW' : datum.state_code == '2' ? 'VIC' : datum.state_code == '3' ? 'QLD' : datum.state_code == '4' ? 'SA' : datum.state_code == '5' ? 'WA' : datum.state_code == '6' ? 'TAS' : datum.state_code == '7' ? 'NT' : 'ACT') : (length(split(datum.state, ' ')) == 1 ? datum.state : join(slice(split(datum.state, ' '),0,ceil(length(split(datum.state, ' '))/2)), ' ')+'\\n'+join(slice(split(datum.state, ' '),ceil(length(split(datum.state, ' '))/2)), ' '))",
+          "as": "label"
+        },
+        {
+          "calculate": "length(split(datum.label,'\\n'))",
+          "as": "line_count"
+        },
+        {
+          "calculate": "datum.crowded ? abs(datum.away_x) >= abs(datum.away_y) ? datum.away_x < 0 ? 'left' : 'right' : datum.away_y < 0 ? 'above' : 'below' : 'above'",
+          "as": "label_side"
+        },
+        {
+          "calculate": "datum.position[0]+(datum.label_side == 'left' ? -datum.radius-8 : datum.label_side == 'right' ? datum.radius+8 : 0)",
+          "as": "label_x"
+        },
+        {
+          "calculate": "datum.position[1]+(datum.label_side == 'above' ? -datum.radius-8-datum.line_count*8 : datum.label_side == 'below' ? datum.radius+8+datum.line_count*8 : 0)",
+          "as": "label_y"
+        },
+        {
+          "filter": "datum.status == 'missing'"
+        },
+        {
+          "calculate": "datum.status == 'missing' ? 'Not reported' : 'Reported'",
+          "as": "status_display"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 14,
+        "fontWeight": 700,
+        "color": "#183247",
+        "lineBreak": "\n",
+        "lineHeight": 16,
+        "align": {
+          "expr": "datum.label_side == 'left' ? 'right' : datum.label_side == 'right' ? 'left' : 'center'"
+        },
+        "baseline": "middle",
+        "dy": {
+          "expr": "-(datum.line_count-1)*8"
+        }
+      },
+      "encoding": {
+        "x": {
+          "field": "label_x",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "y": {
+          "field": "label_y",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "text": {
+          "field": "label"
+        },
+        "tooltip": [
+          {
+            "field": "state",
+            "title": "State",
+            "type": "nominal"
+          },
+          {
+            "field": "status_display",
+            "title": "Production",
+            "type": "nominal"
+          }
+        ]
+      }
+    }
+  ],
+  "config": {
+    "font": "\"Source Sans 3\", Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "titleColor": "#526575",
+      "domain": false,
+      "tickColor": "#ced9df",
+      "gridColor": "#dce5ea",
+      "gridOpacity": 0.65,
+      "labelPadding": 6,
+      "titlePadding": 12,
+      "labelExpr": "datum.value === 0 ? '0' : datum.label"
+    },
+    "legend": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "titleColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "padding": 5
+    },
+    "text": {
+      "fontSize": 13,
+      "fontWeight": 400,
+      "color": "#183247"
+    }
+  }
+}

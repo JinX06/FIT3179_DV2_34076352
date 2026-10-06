@@ -16,7 +16,7 @@
   <main class="page">
     <header class="hero">
       <h1>Australia’s Vegetable Harvest</h1>
-      <p class="standfirst">An interactive visualisation of vegetable production in Australia, covering crop production and changes over time.</p>
+      <p class="standfirst">An interactive visualisation of vegetable production in Australia, covering crop production, changes over time and growing regions.</p>
       <p class="metric-context">All vegetables <span aria-hidden="true"> | </span> <span class="period">2024-25</span></p>
       <dl class="headline-facts" aria-label="National figures for all vegetables in 2024-25">
         <div><dt>Vegetable production</dt><dd>3.78 <span>million tonnes</span></dd><p class="stat-source">Hort Innovation</p></div>
@@ -64,7 +64,33 @@
       </figure>
     </section>
 
-    
+    <section id="states" class="story-section" aria-labelledby="section-3">
+      <div class="section-heading"><h2 id="section-3">Where the vegetables grow</h2></div>
+      <p class="section-intro">Carrots make up 8.1% of the listed harvest. Their growing regions offer a closer look at how production is spread across Australia.</p>
+      <figure class="viz-block map-feature viz-panel" id="vis-7">
+        <figcaption><h3>Western Australia grows 38.6% of the carrots</h3><p>State share of national carrot production in 2024-25.</p></figcaption>
+        <div class="map-row">
+          <div id="choropleth" class="chart" aria-label="Australian states by share of national carrot production"></div>
+          <aside class="map-note">
+            <p class="map-stat">117,402 t<span>of Australia’s 304,038 tonnes</span></p>
+            <p>Western Australia grows more carrots than Victoria and Tasmania combined.</p>
+            <p class="chart-note"><i class="swatch missing"></i>No carrot production figure reported for the Northern Territory or Australian Capital Territory (ACT). Missing is not zero.</p>
+          </aside>
+        </div>
+      </figure>
+      <figure class="viz-block map-feature viz-panel" id="vis-8">
+        <figcaption><h3>Victoria leads reported vegetable output</h3><p>Reported production across the 33 crops in 2024-25. Larger circles mean more tonnes.</p></figcaption>
+        <div class="map-row">
+          <div id="symbols" class="chart" aria-label="Proportional symbols of reported production across the 33 crops by state"></div>
+          <aside class="map-note">
+            <p class="map-stat">926,494 t<span>reported in Victoria</span></p>
+            <p>The circles show reported production. Some states have missing crop figures, so their totals are incomplete.</p>
+            <p class="chart-note">The Northern Territory’s small circle represents <strong>4,328 tonnes</strong>. ACT is unreported.</p>
+          </aside>
+        </div>
+      </figure>
+      
+    </section>
 
     
 
