@@ -1,0 +1,243 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 815,
+  "background": null,
+  "padding": 5,
+  "autosize": {
+    "type": "fit",
+    "contains": "padding",
+    "resize": true
+  },
+  "data": {
+    "url": "data/national_crop_year.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "year_order": "number",
+        "tonnes": "number",
+        "production_index": "number",
+        "baseline_tonnes": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "calculate": "(datum.tonnes / datum.baseline_tonnes - 1) * 100",
+      "as": "change_percent"
+    },
+    {
+      "calculate": "slice(datum.financial_year, 0, 4) + '-' + slice(datum.financial_year, 5)",
+      "as": "financial_year_display"
+    },
+    {
+      "calculate": "format(datum.tonnes, ',.0f') + ' t'",
+      "as": "tonnes_display"
+    },
+    {
+      "calculate": "datum.change_percent == 0 ? '0.0%' : format(datum.change_percent, '+.1f') + '%'",
+      "as": "change_percent_display"
+    }
+  ],
+  "encoding": {
+    "x": {
+      "field": "financial_year_display",
+      "type": "nominal",
+      "title": null,
+      "sort": [
+        "2020-21",
+        "2021-22",
+        "2022-23",
+        "2023-24",
+        "2024-25"
+      ],
+      "axis": {
+        "orient": "top",
+        "labelExpr": "datum.label == '2020-21' ? '2020-21 (base)' : datum.label",
+        "labelAngle": 0,
+        "grid": false,
+        "labelPadding": 8
+      }
+    },
+    "y": {
+      "field": "crop",
+      "type": "nominal",
+      "title": null,
+      "sort": [
+        "Ginger",
+        "Beetroot",
+        "Brussels sprouts",
+        "Cucumbers",
+        "Lettuce (head)",
+        "Sweet corn",
+        "Chillies",
+        "Leafy salad vegetables",
+        "Cabbage",
+        "Capsicums",
+        "Potatoes",
+        "Pumpkins",
+        "Parsnips",
+        "Artichokes",
+        "Broccoli/Baby broccoli",
+        "English spinach/Silverbeet/Kale",
+        "Cauliflower",
+        "Fennel",
+        "Parsley and other fresh herbs excluding fennel",
+        "Eggplant",
+        "Onions",
+        "Asparagus",
+        "Garlic",
+        "Tomatoes",
+        "Celery",
+        "Sweet potatoes",
+        "Carrots",
+        "Leafy Asian vegetables",
+        "Zucchini",
+        "Leeks",
+        "Beans, fresh",
+        "Mushrooms",
+        "Peas"
+      ],
+      "axis": {
+        "labelExpr": "datum.label == 'Parsley and other fresh herbs excluding fennel' ? 'Fresh herbs' : datum.label == 'Lettuce (head)' ? 'Head lettuce' : datum.label",
+        "labelLimit": {
+          "expr": "width < 420 ? 155 : 235"
+        },
+        "labelFontSize": 13,
+        "labelFontWeight": 400,
+        "labelColor": "#526575",
+        "grid": false,
+        "ticks": false
+      }
+    },
+    "tooltip": [
+      {
+        "field": "crop",
+        "title": "Crop",
+        "type": "nominal"
+      },
+      {
+        "field": "financial_year_display",
+        "title": "Year",
+        "type": "nominal"
+      },
+      {
+        "field": "tonnes_display",
+        "title": "Production",
+        "type": "nominal"
+      },
+      {
+        "field": "change_percent_display",
+        "title": "Change from 2020-21",
+        "type": "nominal"
+      }
+    ]
+  },
+  "layer": [
+    {
+      "name": "crop_changes",
+      "mark": {
+        "type": "rect",
+        "stroke": "#ffffff",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "color": {
+          "field": "change_percent",
+          "type": "quantitative",
+          "title": "Change from 2020-21 (%)",
+          "scale": {
+            "domain": [
+              -90,
+              -15,
+              0,
+              15,
+              90
+            ],
+            "range": [
+              "#725382",
+              "#cec1d7",
+              "#f1f3f4",
+              "#b8cfad",
+              "#24734b"
+            ],
+            "interpolate": "rgb"
+          },
+          "legend": {
+            "orient": "top",
+            "direction": "horizontal",
+            "gradientLength": {
+              "expr": "min(420, width)"
+            },
+            "labelOverlap": true,
+            "values": [
+              -90,
+              -45,
+              0,
+              45,
+              90
+            ],
+            "labelExpr": "datum.value == 0 ? '0%' : format(datum.value, '+.0f') + '%'"
+          }
+        }
+      }
+    },
+    {
+      "name": "latest_change_labels",
+      "transform": [
+        {
+          "filter": "datum.year_order == 4 && isValid(datum.change_percent) && (datum.crop == 'Peas' || datum.crop == 'Ginger')"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 13,
+        "fontWeight": 700
+      },
+      "encoding": {
+        "text": {
+          "field": "change_percent_display",
+          "type": "nominal"
+        },
+        "color": {
+          "value": "#183247"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "\"Source Sans 3\", Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "titleColor": "#526575",
+      "domain": false,
+      "tickColor": "#ced9df",
+      "gridColor": "#dce5ea",
+      "gridOpacity": 0.65,
+      "labelPadding": 6,
+      "titlePadding": 12,
+      "labelExpr": "datum.value === 0 ? '0' : datum.label"
+    },
+    "legend": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "titleColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "padding": 5
+    },
+    "text": {
+      "fontSize": 13,
+      "fontWeight": 400,
+      "color": "#183247"
+    }
+  }
+}

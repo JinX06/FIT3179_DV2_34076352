@@ -18,6 +18,10 @@ var chartSpecs = [
   {
     "chartId": "dumbbell",
     "specification": "js/05_dumbbell.vg.json"
+  },
+  {
+    "chartId": "heatmap",
+    "specification": "js/04_heatmap.vg.json"
   }
 ];
 
