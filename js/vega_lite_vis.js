@@ -30,6 +30,10 @@ var chartSpecs = [
   {
     "chartId": "symbols",
     "specification": "js/08_symbols.vg.json"
+  },
+  {
+    "chartId": "mosaic",
+    "specification": "js/09_mosaic.vg.json"
   }
 ];
 

@@ -27,5 +27,6 @@ Built with HTML, CSS, JavaScript, Vega and Vega-Lite.
 - [Crop change heatmap](js/04_heatmap.vg.json)
 - [Carrot share map](js/07_choropleth.vg.json)
 - [State production map](js/08_symbols.vg.json)
+- [State and crop mosaic](js/09_mosaic.vg.json)
 
 [Hand drawn sketch](submission/hand_drawn_sketch.pdf)

@@ -1,0 +1,380 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 355,
+  "background": null,
+  "padding": 5,
+  "autosize": {
+    "type": "fit",
+    "contains": "padding",
+    "resize": true
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "data/mosaic_cells.csv",
+        "format": {
+          "type": "csv",
+          "parse": {
+            "tonnes": "number",
+            "x0": "number",
+            "x1": "number",
+            "y0": "number",
+            "y1": "number",
+            "group_tonnes": "number",
+            "share_percent": "number",
+            "reported_crops": "number",
+            "expected_crops": "number"
+          }
+        }
+      },
+      "transform": [
+        {
+          "filter": "datum.status != 'missing'"
+        },
+        {
+          "calculate": "datum.group == 'Other 30 listed crops' ? 'Other 30 crops' : datum.group",
+          "as": "crop_group_display"
+        },
+        {
+          "calculate": "isValid(datum.tonnes) ? format(datum.tonnes, ',.0f') + ' t' : 'Not reported'",
+          "as": "tonnes_display"
+        },
+        {
+          "calculate": "!isValid(datum.share_percent) ? 'Not reported' : datum.share_percent > 0 && datum.share_percent < 0.1 ? '<0.1%' : datum.share_percent == 0 ? '0%' : format(datum.share_percent, '.1f') + '%'",
+          "as": "share_percent_display"
+        },
+        {
+          "calculate": "format(datum.reported_crops, '.0f') + ' of ' + format(datum.expected_crops, '.0f') + (datum.expected_crops == 1 ? ' crop reported' : ' crops reported')",
+          "as": "coverage_display"
+        }
+      ],
+      "mark": {
+        "type": "rect",
+        "stroke": "#ffffff",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "x0",
+          "type": "quantitative",
+          "title": null,
+          "scale": {
+            "domain": [
+              0,
+              1
+            ]
+          },
+          "axis": {
+            "values": [
+              0.19871209704476211,
+              0.45497820547647433,
+              0.5529787977319753,
+              0.7967126893002632
+            ],
+            "labelExpr": "datum.value < 0.39742419408952423 ? 'Potatoes' : datum.value < 0.5125322168634244 ? 'Tomatoes' : datum.value < 0.5934253786005264 ? 'Carrots' : (width > 500 ? 'Other 30 crops' : 'Other 30')",
+            "labelAngle": {
+              "expr": "width > 500 ? 0 : -50"
+            },
+            "labelAlign": {
+              "expr": "width > 500 ? 'center' : 'right'"
+            },
+            "labelFlush": false,
+            "translate": 0,
+            "labelOverlap": false,
+            "tickSize": 0,
+            "labelPadding": 10,
+            "grid": false
+          }
+        },
+        "x2": {
+          "field": "x1"
+        },
+        "y": {
+          "field": "y0",
+          "type": "quantitative",
+          "title": "State share within group",
+          "scale": {
+            "domain": [
+              0,
+              1
+            ]
+          },
+          "axis": {
+            "format": ".0%",
+            "values": [
+              0,
+              0.5,
+              1
+            ],
+            "grid": false
+          }
+        },
+        "y2": {
+          "field": "y1"
+        },
+        "color": {
+          "field": "state_code",
+          "type": "nominal",
+          "title": "State code",
+          "scale": {
+            "domain": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7"
+            ],
+            "range": [
+              "#4c78a8",
+              "#815f95",
+              "#317e6b",
+              "#c4a44b",
+              "#9c572f",
+              "#a6b8c1",
+              "#604858"
+            ]
+          },
+          "legend": {
+            "title": "State",
+            "orient": "bottom",
+            "direction": "horizontal",
+            "columns": {
+              "expr": "width < 400 ? 3 : 4"
+            },
+            "rowPadding": 8,
+            "columnPadding": {
+              "expr": "width > 800 ? 140 : 16"
+            },
+            "labelExpr": "width > 800 ? (datum.label == '1' ? 'New South Wales' : datum.label == '2' ? 'Victoria' : datum.label == '3' ? 'Queensland' : datum.label == '4' ? 'South Australia' : datum.label == '5' ? 'Western Australia' : datum.label == '6' ? 'Tasmania' : 'Northern Territory') : (datum.label == '1' ? 'NSW' : datum.label == '2' ? 'VIC' : datum.label == '3' ? 'QLD' : datum.label == '4' ? 'SA' : datum.label == '5' ? 'WA' : datum.label == '6' ? 'TAS' : 'NT')",
+            "symbolSize": 100
+          }
+        },
+        "tooltip": [
+          {
+            "field": "crop_group_display",
+            "title": "Crop group",
+            "type": "nominal"
+          },
+          {
+            "field": "state",
+            "title": "State",
+            "type": "nominal"
+          },
+          {
+            "field": "tonnes_display",
+            "title": "Reported production",
+            "type": "nominal"
+          },
+          {
+            "field": "share_percent_display",
+            "title": "Share of group",
+            "type": "nominal"
+          },
+          {
+            "field": "coverage_display",
+            "title": "Coverage",
+            "type": "nominal"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "boundary": 0.39742419408952423
+          },
+          {
+            "boundary": 0.5125322168634244
+          },
+          {
+            "boundary": 0.5934253786005264
+          }
+        ]
+      },
+      "mark": {
+        "type": "rule",
+        "color": "#ffffff",
+        "strokeWidth": 3,
+        "tooltip": null
+      },
+      "encoding": {
+        "x": {
+          "field": "boundary",
+          "type": "quantitative",
+          "title": null,
+          "scale": {
+            "domain": [
+              0,
+              1
+            ]
+          }
+        },
+        "y": {
+          "value": 0
+        },
+        "y2": {
+          "value": {
+            "expr": "height"
+          }
+        }
+      }
+    },
+    {
+      "data": {
+        "url": "data/mosaic_cells.csv",
+        "format": {
+          "type": "csv",
+          "parse": {
+            "tonnes": "number",
+            "x0": "number",
+            "x1": "number",
+            "y0": "number",
+            "y1": "number",
+            "group_tonnes": "number",
+            "share_percent": "number",
+            "reported_crops": "number",
+            "expected_crops": "number"
+          }
+        }
+      },
+      "transform": [
+        {
+          "filter": "datum.status != 'missing' && width*(datum.x1-datum.x0)>50 && height*(datum.y1-datum.y0)>26"
+        },
+        {
+          "calculate": "(datum.x0+datum.x1)/2",
+          "as": "centre_x"
+        },
+        {
+          "calculate": "(datum.y0+datum.y1)/2",
+          "as": "centre_y"
+        },
+        {
+          "calculate": "datum.state_code == '1' ? 'NSW' : datum.state_code == '2' ? 'VIC' : datum.state_code == '3' ? 'QLD' : datum.state_code == '4' ? 'SA' : datum.state_code == '5' ? 'WA' : datum.state_code == '6' ? 'TAS' : 'NT'",
+          "as": "state_short"
+        },
+        {
+          "calculate": "datum.group == 'Other 30 listed crops' ? 'Other 30 crops' : datum.group",
+          "as": "crop_group_display"
+        },
+        {
+          "calculate": "isValid(datum.tonnes) ? format(datum.tonnes, ',.0f') + ' t' : 'Not reported'",
+          "as": "tonnes_display"
+        },
+        {
+          "calculate": "!isValid(datum.share_percent) ? 'Not reported' : datum.share_percent > 0 && datum.share_percent < 0.1 ? '<0.1%' : datum.share_percent == 0 ? '0%' : format(datum.share_percent, '.1f') + '%'",
+          "as": "share_percent_display"
+        },
+        {
+          "calculate": "format(datum.reported_crops, '.0f') + ' of ' + format(datum.expected_crops, '.0f') + (datum.expected_crops == 1 ? ' crop reported' : ' crops reported')",
+          "as": "coverage_display"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 13,
+        "fontWeight": 700
+      },
+      "encoding": {
+        "tooltip": [
+          {
+            "field": "crop_group_display",
+            "title": "Crop group",
+            "type": "nominal"
+          },
+          {
+            "field": "state",
+            "title": "State",
+            "type": "nominal"
+          },
+          {
+            "field": "tonnes_display",
+            "title": "Reported production",
+            "type": "nominal"
+          },
+          {
+            "field": "share_percent_display",
+            "title": "Share of group",
+            "type": "nominal"
+          },
+          {
+            "field": "coverage_display",
+            "title": "Coverage",
+            "type": "nominal"
+          }
+        ],
+        "x": {
+          "field": "centre_x",
+          "type": "quantitative",
+          "title": null,
+          "scale": {
+            "domain": [
+              0,
+              1
+            ]
+          }
+        },
+        "y": {
+          "field": "centre_y",
+          "type": "quantitative",
+          "title": null,
+          "scale": {
+            "domain": [
+              0,
+              1
+            ]
+          }
+        },
+        "text": {
+          "field": "state_short"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.state_code == '4' || datum.state_code == '6'",
+            "value": "#183247"
+          },
+          "value": "#ffffff"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "\"Source Sans 3\", Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "titleColor": "#526575",
+      "domain": false,
+      "tickColor": "#ced9df",
+      "gridColor": "#dce5ea",
+      "gridOpacity": 0.65,
+      "labelPadding": 6,
+      "titlePadding": 12,
+      "labelExpr": "datum.value === 0 ? '0' : datum.label"
+    },
+    "legend": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "titleColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "padding": 5
+    },
+    "text": {
+      "fontSize": 13,
+      "fontWeight": 400,
+      "color": "#183247"
+    }
+  }
+}
