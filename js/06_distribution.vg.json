@@ -1,0 +1,159 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 200,
+  "background": null,
+  "padding": 5,
+  "autosize": {
+    "type": "fit",
+    "contains": "padding",
+    "resize": true
+  },
+  "data": {
+    "url": "data/latest_crops.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "value_per_tonne": "number",
+        "tonnes": "number",
+        "value_aud_m": "number",
+        "position": "number",
+        "offset": "number"
+      }
+    }
+  },
+  "encoding": {
+    "x": {
+      "field": "value_per_tonne",
+      "type": "quantitative",
+      "title": "Farm gate value (A$/tonne)",
+      "scale": {
+        "domain": [
+          0,
+          28000
+        ]
+      },
+      "axis": {
+        "format": ",.0f",
+        "tickCount": 4
+      }
+    },
+    "y": {
+      "field": "offset",
+      "type": "quantitative",
+      "title": null,
+      "scale": {
+        "domain": [
+          -4,
+          6
+        ]
+      },
+      "axis": null
+    },
+    "tooltip": [
+      {
+        "field": "crop",
+        "title": "Crop",
+        "type": "nominal"
+      },
+      {
+        "field": "financial_year_display",
+        "title": "Year",
+        "type": "nominal"
+      },
+      {
+        "field": "value_per_tonne_display",
+        "title": "Value per tonne",
+        "type": "nominal"
+      }
+    ]
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 67,
+        "opacity": 0.85
+      },
+      "encoding": {
+        "color": {
+          "condition": {
+            "test": "datum.crop == 'Parsley and other fresh herbs excluding fennel'",
+            "value": "#183247"
+          },
+          "value": "#416f86"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.crop == 'Asparagus' || datum.crop == 'Parsley and other fresh herbs excluding fennel'"
+        },
+        {
+          "calculate": "datum.crop == 'Asparagus' ? 'Asparagus' : 'Fresh herbs'",
+          "as": "label"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -4,
+        "dy": -16,
+        "fontSize": 13,
+        "fontWeight": 700
+      },
+      "encoding": {
+        "text": {
+          "field": "label"
+        }
+      }
+    }
+  ],
+  "transform": [
+    {
+      "calculate": "slice(datum.financial_year, 0, 4) + '-' + slice(datum.financial_year, 5)",
+      "as": "financial_year_display"
+    },
+    {
+      "calculate": "'A$' + format(datum.value_per_tonne, ',.0f') + '/t'",
+      "as": "value_per_tonne_display"
+    }
+  ],
+  "config": {
+    "font": "\"Source Sans 3\", Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "titleColor": "#526575",
+      "domain": false,
+      "tickColor": "#ced9df",
+      "gridColor": "#D5DED3",
+      "gridOpacity": 1,
+      "labelPadding": 6,
+      "titlePadding": 12,
+      "labelExpr": "datum.value === 0 ? '0' : datum.label"
+    },
+    "legend": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "titleColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "padding": 5
+    },
+    "text": {
+      "fontSize": 13,
+      "fontWeight": 400,
+      "color": "#183247"
+    }
+  }
+}

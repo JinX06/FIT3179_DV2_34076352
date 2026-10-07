@@ -16,7 +16,7 @@
   <main class="page">
     <header class="hero">
       <h1>Australia’s Vegetable Harvest</h1>
-      <p class="standfirst">An interactive visualisation of vegetable production in Australia, covering crop production, changes over time and growing regions.</p>
+      <p class="standfirst">An interactive visualisation of vegetable production in Australia, covering crop production, changes over time, growing regions and farm gate value.</p>
       <p class="metric-context">All vegetables <span aria-hidden="true"> | </span> <span class="period">2024-25</span></p>
       <dl class="headline-facts" aria-label="National figures for all vegetables in 2024-25">
         <div><dt>Vegetable production</dt><dd>3.78 <span>million tonnes</span></dd><p class="stat-source">Hort Innovation</p></div>
@@ -97,7 +97,27 @@
       </figure>
     </section>
 
-    
+    <section id="pathways" class="story-section" aria-labelledby="section-4">
+      <div class="section-heading"><h2 id="section-4">Value and supply</h2></div>
+      <div class="section-context">
+        <p>Tonnes tell only part of the story. Crops differ in their value per tonne and in how they reach the market.</p>
+        <p>In a study covering 1969–70 to 2020–21, <a href="https://www.agriculture.gov.au/abares/research-topics/productivity/related-research/growing-the-australian-vegetable-industry">ABARES</a> found that demand for more variety, better quality and convenience influenced which crops farmers grew and the quality of their produce.</p>
+        <p>The study also notes that irrigation helps growers cope with drought. These findings provide background to the industry, rather than explaining why individual crops changed in the charts below.</p>
+      </div>
+      <figure class="viz-block viz-panel" id="vis-6">
+        <figcaption><h3>Fresh herbs have the highest value per tonne</h3><p>Farm gate value divided by production in 2024-25, in Australian dollars per tonne. Each dot is one crop. Dots are spread vertically to reduce overlap.</p></figcaption>
+        <div id="distribution" class="chart"></div>
+        <p class="finding">Parsley and other fresh herbs, excluding fennel, average <strong>A$25,819 per tonne</strong>. This average is based on farm gate value. It is not a retail price or a measure of profit.</p>
+      </figure>
+      <div class="value-row viz-panel">
+        <figure class="viz-block" id="vis-10">
+          <figcaption><h3>Potatoes lead both production and total value</h3><p>Production in tonnes and farm gate value in A$ million for the 33 crops in 2024-25.</p></figcaption>
+          <div id="scatter" class="chart"></div>
+        </figure>
+        <aside class="reading-aside"><p><strong>Leafy salad vegetables</strong> account for 2.2% of production, but 11.6% of farm gate value across these crops.</p><p class="chart-note">A smaller harvest can contribute a large share of total value.</p></aside>
+      </div>
+      
+    </section>
 
     
 

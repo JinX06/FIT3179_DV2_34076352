@@ -34,6 +34,14 @@ var chartSpecs = [
   {
     "chartId": "mosaic",
     "specification": "js/09_mosaic.vg.json"
+  },
+  {
+    "chartId": "distribution",
+    "specification": "js/06_distribution.vg.json"
+  },
+  {
+    "chartId": "scatter",
+    "specification": "js/10_scatter.vg.json"
   }
 ];
 
