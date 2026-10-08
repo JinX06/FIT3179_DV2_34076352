@@ -1,0 +1,175 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 310,
+  "background": null,
+  "padding": 5,
+  "autosize": {
+    "type": "fit",
+    "contains": "padding",
+    "resize": true
+  },
+  "data": {
+    "url": "data/trade_partners_2025.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "rank": "number",
+        "value_usd": "number",
+        "net_kg": "number",
+        "world_share_percent": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "calculate": "datum.value_usd / 1000000",
+      "as": "value_usd_m"
+    },
+    {
+      "calculate": "datum.world_share_percent > 0 && datum.world_share_percent < 0.1 ? '<0.1%' : datum.world_share_percent == 0 ? '0%' : format(datum.world_share_percent, '.1f') + '%'",
+      "as": "world_share_percent_display"
+    },
+    {
+      "calculate": "'US$' + format(datum.value_usd, ',.0f')",
+      "as": "value_usd_display"
+    }
+  ],
+  "encoding": {
+    "y": {
+      "field": "country",
+      "type": "nominal",
+      "title": null,
+      "sort": [
+        "United Arab Emirates",
+        "Saudi Arabia",
+        "Malaysia",
+        "Singapore",
+        "Qatar"
+      ],
+      "axis": {
+        "labelLimit": 145,
+        "labelExpr": "datum.label == 'United Arab Emirates' && width < 360 ? 'UAE' : datum.label",
+        "ticks": false,
+        "grid": false
+      }
+    },
+    "x": {
+      "field": "value_usd_m",
+      "type": "quantitative",
+      "title": "Export value (US$ million)",
+      "scale": {
+        "domain": [
+          0,
+          16
+        ]
+      },
+      "axis": {
+        "tickCount": 5,
+        "format": ".0f"
+      }
+    },
+    "tooltip": [
+      {
+        "field": "country",
+        "title": "Destination",
+        "type": "nominal"
+      },
+      {
+        "field": "rank",
+        "title": "Rank",
+        "type": "quantitative",
+        "format": ".0f"
+      },
+      {
+        "field": "value_usd_display",
+        "title": "Export value",
+        "type": "nominal"
+      },
+      {
+        "field": "world_share_percent_display",
+        "title": "Export share",
+        "type": "nominal"
+      }
+    ]
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "bar",
+        "height": 24
+      },
+      "encoding": {
+        "color": {
+          "condition": {
+            "test": "datum.iso3 == 'MYS'",
+            "value": "#9b6000"
+          },
+          "value": "#416f86"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": {
+          "expr": "datum.iso3 == 'ARE' && width < 300 ? 'right' : 'left'"
+        },
+        "dx": {
+          "expr": "datum.iso3 == 'ARE' && width < 300 ? -6 : 7"
+        },
+        "fontWeight": 700,
+        "fontSize": 13
+      },
+      "encoding": {
+        "text": {
+          "field": "value_usd_m",
+          "type": "quantitative",
+          "format": ".2f"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.iso3 == 'ARE' && width < 300",
+            "value": "#ffffff"
+          },
+          "value": "#183247"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "\"Source Sans 3\", Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "titleColor": "#526575",
+      "domain": false,
+      "tickColor": "#ced9df",
+      "gridColor": "#D5DED3",
+      "gridOpacity": 1,
+      "labelPadding": 6,
+      "titlePadding": 12,
+      "labelExpr": "datum.value === 0 ? '0' : datum.label"
+    },
+    "legend": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "titleColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "padding": 5
+    },
+    "text": {
+      "fontSize": 13,
+      "fontWeight": 400,
+      "color": "#183247"
+    }
+  }
+}

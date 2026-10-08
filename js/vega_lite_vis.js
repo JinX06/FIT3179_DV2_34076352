@@ -46,6 +46,14 @@ var chartSpecs = [
   {
     "chartId": "sankey",
     "specification": "js/11_potato_sankey.vg.json"
+  },
+  {
+    "chartId": "flow",
+    "specification": "js/12_export_flow.vg.json"
+  },
+  {
+    "chartId": "ranked",
+    "specification": "js/13_ranked_destinations.vg.json"
   }
 ];
 

@@ -1,0 +1,1251 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 560,
+  "background": null,
+  "padding": 0,
+  "autosize": {
+    "type": "fit",
+    "contains": "padding",
+    "resize": true
+  },
+  "projection": {
+    "type": "equalEarth",
+    "rotate": [
+      -100,
+      0,
+      0
+    ],
+    "scale": {
+      "expr": "regional_scale"
+    },
+    "translate": {
+      "expr": "[regional_x, regional_y]"
+    },
+    "clipExtent": {
+      "expr": "[[0,16],[width,height-46]]"
+    }
+  },
+  "params": [
+    {
+      "name": "regional_scale",
+      "expr": "min((width-16)/2.16530398695686, (height-86)/1.8822802489697874)"
+    },
+    {
+      "name": "regional_x",
+      "expr": "width/2 - regional_scale * -0.060147332971023926"
+    },
+    {
+      "name": "regional_y",
+      "expr": "(height-22)/2 - regional_scale * -0.03156432982828894"
+    }
+  ],
+  "description": "Australian exports of fresh or chilled carrots and turnips in calendar 2025. Line width shows value. Schematic connections between country representative points.",
+  "layer": [
+    {
+      "data": {
+        "url": "data/geo/world_countries.topojson",
+        "format": {
+          "type": "topojson",
+          "feature": "countries"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "stroke": "#7F9488",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "color": {
+          "condition": {
+            "test": "datum.properties.iso3 == 'AUS'",
+            "value": "#a5bdac"
+          },
+          "value": "#d4ded8"
+        }
+      }
+    },
+    {
+      "name": "destination_leaders",
+      "data": {
+        "url": "data/derived/export_flows.json",
+        "format": {
+          "type": "json"
+        }
+      },
+      "transform": [
+        {
+          "calculate": "datum.raw_sy * regional_scale + regional_y",
+          "as": "sy"
+        },
+        {
+          "calculate": "datum.raw_ty * regional_scale + regional_y",
+          "as": "ty"
+        },
+        {
+          "joinaggregate": [
+            {
+              "op": "min",
+              "field": "raw_tx",
+              "as": "min_x"
+            },
+            {
+              "op": "max",
+              "field": "raw_tx",
+              "as": "max_x"
+            }
+          ]
+        },
+        {
+          "calculate": "datum.raw_tx < (datum.min_x+datum.max_x)/2 ? 'left' : 'right'",
+          "as": "label_side"
+        },
+        {
+          "window": [
+            {
+              "op": "row_number",
+              "as": "label_order"
+            }
+          ],
+          "groupby": [
+            "label_side"
+          ],
+          "sort": [
+            {
+              "field": "rank",
+              "order": "ascending"
+            }
+          ]
+        },
+        {
+          "joinaggregate": [
+            {
+              "op": "count",
+              "as": "label_count"
+            },
+            {
+              "op": "mean",
+              "field": "ty",
+              "as": "mean_y"
+            }
+          ],
+          "groupby": [
+            "label_side"
+          ]
+        },
+        {
+          "calculate": "min(174,max(104,width*.24))",
+          "as": "label_width"
+        },
+        {
+          "calculate": "width < 460 ? 54 : 64",
+          "as": "label_gap"
+        },
+        {
+          "calculate": "datum.label_side == 'left' ? 12 : width-datum.label_width-12",
+          "as": "label_x"
+        },
+        {
+          "calculate": "clamp(datum.mean_y-(datum.label_count-1)*datum.label_gap/2,40,min(height-80,datum.sy-68)-(datum.label_count-1)*datum.label_gap)+(datum.label_order-1)*datum.label_gap",
+          "as": "label_y"
+        },
+        {
+          "calculate": "datum.raw_tx * regional_scale + regional_x",
+          "as": "tx"
+        },
+        {
+          "calculate": "datum.label_side == 'left' ? datum.label_x+datum.label_width : datum.label_x-4",
+          "as": "leader_x"
+        },
+        {
+          "calculate": "datum.label_y+3",
+          "as": "leader_y"
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "color": "#526575",
+        "strokeWidth": 0.8
+      },
+      "encoding": {
+        "x": {
+          "field": "tx",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "y": {
+          "field": "ty",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "x2": {
+          "field": "leader_x"
+        },
+        "y2": {
+          "field": "leader_y"
+        }
+      }
+    },
+    {
+      "name": "export_flows",
+      "data": {
+        "url": "data/derived/export_samples.json",
+        "format": {
+          "type": "json"
+        }
+      },
+      "transform": [
+        {
+          "lookup": "iso3",
+          "from": {
+            "data": {
+              "url": "data/derived/export_flows.json",
+              "format": {
+                "type": "json"
+              }
+            },
+            "key": "iso3",
+            "fields": [
+              "rank",
+              "country",
+              "partner_code",
+              "value_usd",
+              "net_kg",
+              "world_share_percent",
+              "longitude",
+              "latitude",
+              "raw_sx",
+              "raw_sy",
+              "raw_tx",
+              "raw_ty"
+            ]
+          }
+        },
+        {
+          "calculate": "datum.raw_sx * regional_scale + regional_x",
+          "as": "sx"
+        },
+        {
+          "calculate": "datum.raw_sy * regional_scale + regional_y",
+          "as": "sy"
+        },
+        {
+          "calculate": "datum.raw_tx * regional_scale + regional_x",
+          "as": "tx"
+        },
+        {
+          "calculate": "datum.raw_ty * regional_scale + regional_y",
+          "as": "ty"
+        },
+        {
+          "calculate": "datum.iso3 == 'MYS' ? '#9b6000' : '#416f86'",
+          "as": "colour"
+        },
+        {
+          "calculate": "2025",
+          "as": "calendar_year"
+        },
+        {
+          "calculate": "sqrt(pow(datum.tx-datum.sx,2)+pow(datum.ty-datum.sy,2))",
+          "as": "connection_length"
+        },
+        {
+          "calculate": "width*(.035+.018*datum.rank)*(datum.rank%2 ? 1 : -1)",
+          "as": "bend"
+        },
+        {
+          "calculate": "(datum.sx+datum.tx)/2-(datum.ty-datum.sy)/datum.connection_length*datum.bend",
+          "as": "control_x"
+        },
+        {
+          "calculate": "(datum.sy+datum.ty)/2+(datum.tx-datum.sx)/datum.connection_length*datum.bend",
+          "as": "control_y"
+        },
+        {
+          "calculate": "(1-datum.t)*(1-datum.t)*datum.sx + 2*(1-datum.t)*datum.t*datum.control_x + datum.t*datum.t*datum.tx",
+          "as": "x"
+        },
+        {
+          "calculate": "(1-datum.t)*(1-datum.t)*datum.sy + 2*(1-datum.t)*datum.t*datum.control_y + datum.t*datum.t*datum.ty",
+          "as": "y"
+        },
+        {
+          "calculate": "!isValid(datum.world_share_percent) ? 'Not reported' : datum.world_share_percent > 0 && datum.world_share_percent < 0.1 ? '<0.1%' : datum.world_share_percent == 0 ? '0%' : format(datum.world_share_percent, '.1f') + '%'",
+          "as": "world_share_percent_display"
+        },
+        {
+          "calculate": "'US$' + format(datum.value_usd, ',.0f')",
+          "as": "value_usd_display"
+        }
+      ],
+      "params": [
+        {
+          "name": "export_hover",
+          "select": {
+            "type": "point",
+            "fields": [
+              "iso3"
+            ],
+            "on": "pointerover",
+            "clear": "pointerout"
+          }
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "interpolate": "linear",
+        "strokeCap": "round"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "detail": {
+          "field": "iso3",
+          "type": "nominal",
+          "title": null,
+          "sort": [
+            "ARE",
+            "SAU",
+            "SGP",
+            "QAT",
+            "MYS"
+          ]
+        },
+        "order": {
+          "field": "t",
+          "type": "quantitative",
+          "title": null
+        },
+        "color": {
+          "field": "colour",
+          "type": "nominal",
+          "scale": null,
+          "legend": null
+        },
+        "strokeWidth": {
+          "field": "value_usd",
+          "type": "quantitative",
+          "title": null,
+          "scale": {
+            "type": "linear",
+            "domain": [
+              0,
+              14010888.831
+            ],
+            "range": [
+              0,
+              11
+            ],
+            "zero": true
+          },
+          "legend": null
+        },
+        "opacity": {
+          "condition": [
+            {
+              "param": "export_hover",
+              "empty": false,
+              "value": 1
+            },
+            {
+              "param": "endpoint_hover",
+              "empty": false,
+              "value": 1
+            },
+            {
+              "param": "label_hover",
+              "empty": false,
+              "value": 1
+            }
+          ],
+          "value": {
+            "expr": "length(data('export_hover_store')) + length(data('endpoint_hover_store')) + length(data('label_hover_store')) > 0 ? .20 : .82"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "country",
+            "title": "Destination",
+            "type": "nominal"
+          },
+          {
+            "field": "calendar_year",
+            "title": "Year",
+            "type": "quantitative",
+            "format": ".0f"
+          },
+          {
+            "field": "value_usd_display",
+            "title": "Export value",
+            "type": "nominal"
+          },
+          {
+            "field": "world_share_percent_display",
+            "title": "Export share",
+            "type": "nominal"
+          }
+        ]
+      }
+    },
+    {
+      "name": "destination_points",
+      "data": {
+        "url": "data/derived/export_flows.json",
+        "format": {
+          "type": "json"
+        }
+      },
+      "transform": [
+        {
+          "calculate": "datum.iso3 == 'MYS' ? '#9b6000' : '#416f86'",
+          "as": "colour"
+        },
+        {
+          "calculate": "2025",
+          "as": "calendar_year"
+        },
+        {
+          "calculate": "datum.world_share_percent > 0 && datum.world_share_percent < 0.1 ? '<0.1%' : datum.world_share_percent == 0 ? '0%' : format(datum.world_share_percent, '.1f') + '%'",
+          "as": "world_share_percent_display"
+        },
+        {
+          "calculate": "'US$' + format(datum.value_usd, ',.0f')",
+          "as": "value_usd_display"
+        }
+      ],
+      "mark": {
+        "type": "circle",
+        "size": 55,
+        "stroke": "#ffffff",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "longitude": {
+          "field": "longitude",
+          "type": "quantitative",
+          "title": null
+        },
+        "latitude": {
+          "field": "latitude",
+          "type": "quantitative",
+          "title": null
+        },
+        "color": {
+          "field": "colour",
+          "type": "nominal",
+          "scale": null,
+          "legend": null
+        },
+        "opacity": {
+          "condition": [
+            {
+              "param": "export_hover",
+              "empty": false,
+              "value": 1
+            },
+            {
+              "param": "endpoint_hover",
+              "empty": false,
+              "value": 1
+            },
+            {
+              "param": "label_hover",
+              "empty": false,
+              "value": 1
+            }
+          ],
+          "value": {
+            "expr": "length(data('export_hover_store')) + length(data('endpoint_hover_store')) + length(data('label_hover_store')) > 0 ? .20 : .82"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "country",
+            "title": "Destination",
+            "type": "nominal"
+          },
+          {
+            "field": "calendar_year",
+            "title": "Year",
+            "type": "quantitative",
+            "format": ".0f"
+          },
+          {
+            "field": "value_usd_display",
+            "title": "Export value",
+            "type": "nominal"
+          },
+          {
+            "field": "world_share_percent_display",
+            "title": "Export share",
+            "type": "nominal"
+          }
+        ]
+      },
+      "params": [
+        {
+          "name": "endpoint_hover",
+          "select": {
+            "type": "point",
+            "fields": [
+              "iso3"
+            ],
+            "on": "pointerover",
+            "clear": "pointerout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "origin_point",
+      "data": {
+        "url": "data/derived/export_origin.json",
+        "format": {
+          "type": "json"
+        }
+      },
+      "mark": {
+        "type": "circle",
+        "size": 150,
+        "opacity": 1,
+        "color": "#183247",
+        "stroke": "#ffffff",
+        "strokeWidth": 1.5
+      },
+      "encoding": {
+        "longitude": {
+          "field": "longitude",
+          "type": "quantitative",
+          "title": null
+        },
+        "latitude": {
+          "field": "latitude",
+          "type": "quantitative",
+          "title": null
+        },
+        "tooltip": [
+          {
+            "field": "country",
+            "title": "Origin",
+            "type": "nominal"
+          }
+        ]
+      }
+    },
+    {
+      "name": "origin_label",
+      "data": {
+        "url": "data/derived/export_origin.json",
+        "format": {
+          "type": "json"
+        }
+      },
+      "transform": [
+        {
+          "calculate": "datum.raw_x * regional_scale + regional_x",
+          "as": "x"
+        },
+        {
+          "calculate": "datum.raw_y * regional_scale + regional_y-sqrt(150)/2-8",
+          "as": "y"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 14,
+        "fontWeight": 700,
+        "align": "center",
+        "baseline": "bottom",
+        "color": "#183247"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "text": {
+          "value": "Australia"
+        }
+      }
+    },
+    {
+      "name": "label_backdrops",
+      "data": {
+        "url": "data/derived/export_flows.json",
+        "format": {
+          "type": "json"
+        }
+      },
+      "transform": [
+        {
+          "calculate": "datum.raw_sy * regional_scale + regional_y",
+          "as": "sy"
+        },
+        {
+          "calculate": "datum.raw_ty * regional_scale + regional_y",
+          "as": "ty"
+        },
+        {
+          "joinaggregate": [
+            {
+              "op": "min",
+              "field": "raw_tx",
+              "as": "min_x"
+            },
+            {
+              "op": "max",
+              "field": "raw_tx",
+              "as": "max_x"
+            }
+          ]
+        },
+        {
+          "calculate": "datum.raw_tx < (datum.min_x+datum.max_x)/2 ? 'left' : 'right'",
+          "as": "label_side"
+        },
+        {
+          "window": [
+            {
+              "op": "row_number",
+              "as": "label_order"
+            }
+          ],
+          "groupby": [
+            "label_side"
+          ],
+          "sort": [
+            {
+              "field": "rank",
+              "order": "ascending"
+            }
+          ]
+        },
+        {
+          "joinaggregate": [
+            {
+              "op": "count",
+              "as": "label_count"
+            },
+            {
+              "op": "mean",
+              "field": "ty",
+              "as": "mean_y"
+            }
+          ],
+          "groupby": [
+            "label_side"
+          ]
+        },
+        {
+          "calculate": "min(174,max(104,width*.24))",
+          "as": "label_width"
+        },
+        {
+          "calculate": "width < 460 ? 54 : 64",
+          "as": "label_gap"
+        },
+        {
+          "calculate": "datum.label_side == 'left' ? 12 : width-datum.label_width-12",
+          "as": "label_x"
+        },
+        {
+          "calculate": "clamp(datum.mean_y-(datum.label_count-1)*datum.label_gap/2,40,min(height-80,datum.sy-68)-(datum.label_count-1)*datum.label_gap)+(datum.label_order-1)*datum.label_gap",
+          "as": "label_y"
+        },
+        {
+          "calculate": "datum.label_x-4",
+          "as": "box_x0"
+        },
+        {
+          "calculate": "datum.label_x-4+datum.label_width",
+          "as": "box_x1"
+        },
+        {
+          "calculate": "datum.label_y-16",
+          "as": "box_y0"
+        },
+        {
+          "calculate": "datum.label_y+24",
+          "as": "box_y1"
+        }
+      ],
+      "mark": {
+        "type": "rect",
+        "color": "#ffffff",
+        "opacity": 0.94
+      },
+      "encoding": {
+        "x": {
+          "field": "box_x0",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "x2": {
+          "field": "box_x1"
+        },
+        "y": {
+          "field": "box_y0",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "y2": {
+          "field": "box_y1"
+        }
+      }
+    },
+    {
+      "name": "destination_labels",
+      "data": {
+        "url": "data/derived/export_flows.json",
+        "format": {
+          "type": "json"
+        }
+      },
+      "transform": [
+        {
+          "calculate": "datum.raw_sy * regional_scale + regional_y",
+          "as": "sy"
+        },
+        {
+          "calculate": "datum.raw_ty * regional_scale + regional_y",
+          "as": "ty"
+        },
+        {
+          "joinaggregate": [
+            {
+              "op": "min",
+              "field": "raw_tx",
+              "as": "min_x"
+            },
+            {
+              "op": "max",
+              "field": "raw_tx",
+              "as": "max_x"
+            }
+          ]
+        },
+        {
+          "calculate": "datum.raw_tx < (datum.min_x+datum.max_x)/2 ? 'left' : 'right'",
+          "as": "label_side"
+        },
+        {
+          "window": [
+            {
+              "op": "row_number",
+              "as": "label_order"
+            }
+          ],
+          "groupby": [
+            "label_side"
+          ],
+          "sort": [
+            {
+              "field": "rank",
+              "order": "ascending"
+            }
+          ]
+        },
+        {
+          "joinaggregate": [
+            {
+              "op": "count",
+              "as": "label_count"
+            },
+            {
+              "op": "mean",
+              "field": "ty",
+              "as": "mean_y"
+            }
+          ],
+          "groupby": [
+            "label_side"
+          ]
+        },
+        {
+          "calculate": "min(174,max(104,width*.24))",
+          "as": "label_width"
+        },
+        {
+          "calculate": "width < 460 ? 54 : 64",
+          "as": "label_gap"
+        },
+        {
+          "calculate": "datum.label_side == 'left' ? 12 : width-datum.label_width-12",
+          "as": "label_x"
+        },
+        {
+          "calculate": "clamp(datum.mean_y-(datum.label_count-1)*datum.label_gap/2,40,min(height-80,datum.sy-68)-(datum.label_count-1)*datum.label_gap)+(datum.label_order-1)*datum.label_gap",
+          "as": "label_y"
+        },
+        {
+          "calculate": "datum.iso3 == 'MYS' ? '#9b6000' : '#416f86'",
+          "as": "colour"
+        },
+        {
+          "calculate": "2025",
+          "as": "calendar_year"
+        },
+        {
+          "calculate": "length(datum.country)*7.2 <= datum.label_width-8 ? datum.country : datum.iso3 == 'ARE' ? 'UAE' : datum.iso3",
+          "as": "display_country"
+        },
+        {
+          "calculate": "datum.world_share_percent > 0 && datum.world_share_percent < 0.1 ? '<0.1%' : datum.world_share_percent == 0 ? '0%' : format(datum.world_share_percent, '.1f') + '%'",
+          "as": "world_share_percent_display"
+        },
+        {
+          "calculate": "'US$' + format(datum.value_usd, ',.0f')",
+          "as": "value_usd_display"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 14,
+        "fontWeight": 700,
+        "align": "left",
+        "baseline": "alphabetic"
+      },
+      "encoding": {
+        "x": {
+          "field": "label_x",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "y": {
+          "field": "label_y",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "text": {
+          "field": "display_country"
+        },
+        "color": {
+          "field": "colour",
+          "type": "nominal",
+          "scale": null,
+          "legend": null
+        },
+        "tooltip": [
+          {
+            "field": "country",
+            "title": "Destination",
+            "type": "nominal"
+          },
+          {
+            "field": "calendar_year",
+            "title": "Year",
+            "type": "quantitative",
+            "format": ".0f"
+          },
+          {
+            "field": "value_usd_display",
+            "title": "Export value",
+            "type": "nominal"
+          },
+          {
+            "field": "world_share_percent_display",
+            "title": "Export share",
+            "type": "nominal"
+          }
+        ]
+      },
+      "params": [
+        {
+          "name": "label_hover",
+          "select": {
+            "type": "point",
+            "fields": [
+              "iso3"
+            ],
+            "on": "pointerover",
+            "clear": "pointerout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "destination_values",
+      "data": {
+        "url": "data/derived/export_flows.json",
+        "format": {
+          "type": "json"
+        }
+      },
+      "transform": [
+        {
+          "calculate": "datum.raw_sy * regional_scale + regional_y",
+          "as": "sy"
+        },
+        {
+          "calculate": "datum.raw_ty * regional_scale + regional_y",
+          "as": "ty"
+        },
+        {
+          "joinaggregate": [
+            {
+              "op": "min",
+              "field": "raw_tx",
+              "as": "min_x"
+            },
+            {
+              "op": "max",
+              "field": "raw_tx",
+              "as": "max_x"
+            }
+          ]
+        },
+        {
+          "calculate": "datum.raw_tx < (datum.min_x+datum.max_x)/2 ? 'left' : 'right'",
+          "as": "label_side"
+        },
+        {
+          "window": [
+            {
+              "op": "row_number",
+              "as": "label_order"
+            }
+          ],
+          "groupby": [
+            "label_side"
+          ],
+          "sort": [
+            {
+              "field": "rank",
+              "order": "ascending"
+            }
+          ]
+        },
+        {
+          "joinaggregate": [
+            {
+              "op": "count",
+              "as": "label_count"
+            },
+            {
+              "op": "mean",
+              "field": "ty",
+              "as": "mean_y"
+            }
+          ],
+          "groupby": [
+            "label_side"
+          ]
+        },
+        {
+          "calculate": "min(174,max(104,width*.24))",
+          "as": "label_width"
+        },
+        {
+          "calculate": "width < 460 ? 54 : 64",
+          "as": "label_gap"
+        },
+        {
+          "calculate": "datum.label_side == 'left' ? 12 : width-datum.label_width-12",
+          "as": "label_x"
+        },
+        {
+          "calculate": "clamp(datum.mean_y-(datum.label_count-1)*datum.label_gap/2,40,min(height-80,datum.sy-68)-(datum.label_count-1)*datum.label_gap)+(datum.label_order-1)*datum.label_gap",
+          "as": "label_y"
+        },
+        {
+          "calculate": "2025",
+          "as": "calendar_year"
+        },
+        {
+          "calculate": "'US$' + format(datum.value_usd/1000000, '.2f') + 'm'",
+          "as": "value_label"
+        },
+        {
+          "calculate": "datum.world_share_percent > 0 && datum.world_share_percent < 0.1 ? '<0.1%' : datum.world_share_percent == 0 ? '0%' : format(datum.world_share_percent, '.1f') + '%'",
+          "as": "world_share_percent_display"
+        },
+        {
+          "calculate": "'US$' + format(datum.value_usd, ',.0f')",
+          "as": "value_usd_display"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 14,
+        "dy": 16,
+        "align": "left",
+        "baseline": "alphabetic",
+        "color": "#526575"
+      },
+      "encoding": {
+        "x": {
+          "field": "label_x",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "y": {
+          "field": "label_y",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "text": {
+          "field": "value_label"
+        },
+        "tooltip": [
+          {
+            "field": "country",
+            "title": "Destination",
+            "type": "nominal"
+          },
+          {
+            "field": "calendar_year",
+            "title": "Year",
+            "type": "quantitative",
+            "format": ".0f"
+          },
+          {
+            "field": "value_usd_display",
+            "title": "Export value",
+            "type": "nominal"
+          },
+          {
+            "field": "world_share_percent_display",
+            "title": "Export share",
+            "type": "nominal"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {}
+        ]
+      },
+      "transform": [
+        {
+          "calculate": "height-(width < 460 ? 40 : 16)",
+          "as": "y"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 14,
+        "align": "left",
+        "baseline": "alphabetic",
+        "color": "#526575"
+      },
+      "encoding": {
+        "x": {
+          "value": 8
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "text": {
+          "value": "Export value (US$)"
+        }
+      }
+    },
+    {
+      "name": "flow_legend_rules",
+      "data": {
+        "values": [
+          {
+            "value_usd": 5000000,
+            "label": "5m",
+            "x_fraction": 0.5
+          },
+          {
+            "value_usd": 10000000,
+            "label": "10m",
+            "x_fraction": 0.75
+          }
+        ]
+      },
+      "transform": [
+        {
+          "calculate": "width*(width < 460 ? (datum.value_usd == 5000000 ? .12 : .60) : datum.x_fraction)",
+          "as": "x"
+        },
+        {
+          "calculate": "datum.x+27",
+          "as": "x2"
+        },
+        {
+          "calculate": "height-20",
+          "as": "y"
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "color": "#416f86"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "x2": {
+          "field": "x2"
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "strokeWidth": {
+          "field": "value_usd",
+          "type": "quantitative",
+          "title": null,
+          "scale": {
+            "type": "linear",
+            "domain": [
+              0,
+              14010888.831
+            ],
+            "range": [
+              0,
+              11
+            ],
+            "zero": true
+          },
+          "legend": null
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "value_usd": 5000000,
+            "label": "5m",
+            "x_fraction": 0.5
+          },
+          {
+            "value_usd": 10000000,
+            "label": "10m",
+            "x_fraction": 0.75
+          }
+        ]
+      },
+      "transform": [
+        {
+          "calculate": "width*(width < 460 ? (datum.value_usd == 5000000 ? .12 : .60) : datum.x_fraction)",
+          "as": "x"
+        },
+        {
+          "calculate": "datum.x+33",
+          "as": "label_x"
+        },
+        {
+          "calculate": "height-16",
+          "as": "label_y"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 14,
+        "align": "left",
+        "baseline": "alphabetic",
+        "color": "#526575"
+      },
+      "encoding": {
+        "x": {
+          "field": "label_x",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "y": {
+          "field": "label_y",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "text": {
+          "field": "label"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "\"Source Sans 3\", Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "titleColor": "#526575",
+      "domain": false,
+      "tickColor": "#ced9df",
+      "gridColor": "#dce5ea",
+      "gridOpacity": 0.65,
+      "labelPadding": 6,
+      "titlePadding": 12,
+      "labelExpr": "datum.value === 0 ? '0' : datum.label"
+    },
+    "legend": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "titleColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "padding": 5
+    },
+    "text": {
+      "fontSize": 13,
+      "fontWeight": 400,
+      "color": "#183247"
+    }
+  }
+}
