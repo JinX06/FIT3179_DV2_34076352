@@ -42,6 +42,10 @@ var chartSpecs = [
   {
     "chartId": "scatter",
     "specification": "js/10_scatter.vg.json"
+  },
+  {
+    "chartId": "sankey",
+    "specification": "js/11_potato_sankey.vg.json"
   }
 ];
 

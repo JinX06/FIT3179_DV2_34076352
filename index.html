@@ -16,7 +16,7 @@
   <main class="page">
     <header class="hero">
       <h1>Australia’s Vegetable Harvest</h1>
-      <p class="standfirst">An interactive visualisation of vegetable production in Australia, covering crop production, changes over time, growing regions and farm gate value.</p>
+      <p class="standfirst">An interactive visualisation of vegetable production in Australia, covering crop production, changes over time, growing regions, farm gate value and potato supply.</p>
       <p class="metric-context">All vegetables <span aria-hidden="true"> | </span> <span class="period">2024-25</span></p>
       <dl class="headline-facts" aria-label="National figures for all vegetables in 2024-25">
         <div><dt>Vegetable production</dt><dd>3.78 <span>million tonnes</span></dd><p class="stat-source">Hort Innovation</p></div>
@@ -116,7 +116,16 @@
         </figure>
         <aside class="reading-aside"><p><strong>Leafy salad vegetables</strong> account for 2.2% of production, but 11.6% of farm gate value across these crops.</p><p class="chart-note">A smaller harvest can contribute a large share of total value.</p></aside>
       </div>
-      
+      <figure class="viz-block viz-panel" id="vis-11">
+        <figcaption><h3>About two-thirds of potatoes go to processing</h3><p>Estimated supply, year ending June 2025.</p></figcaption>
+        <div id="sankey" class="chart"></div>
+        <p class="chart-note">Fresh supply splits into retail and food service. These are supply estimates, not measured consumption.</p>
+      </figure>
+      <div class="demand-context">
+        <p>According to <a href="https://www.abs.gov.au/statistics/health/food-and-nutrition/apparent-consumption-selected-foodstuffs-australia/2023-24">ABS retail-sales estimates</a>, purchases of leaf and stalk vegetables rose by <strong>5.0% per person</strong> from 2022–23 to 2023–24. This group includes lettuce, spinach and celery.</p>
+        <p>Purchases of peas and beans fell by <strong>12.1% per person</strong> over the same period.</p>
+        <p class="context-note">These figures measure the weight of food bought from retailers, not how much people ate. The vegetable groups and years also differ from those in the production charts.</p>
+      </div>
     </section>
 
     

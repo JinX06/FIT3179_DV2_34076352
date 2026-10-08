@@ -3,7 +3,7 @@
 FIT3179 Data Visualisation 2  
 Ong Jin Xiang | 34076352 | Monash University Malaysia | 2026
 
-An interactive visualisation of vegetable production in Australia, covering crop production, changes over time, growing regions and farm gate value.
+An interactive visualisation of vegetable production in Australia, covering crop production, changes over time, growing regions, farm gate value and potato supply.
 
 Website link will be added when published.
 
@@ -30,5 +30,6 @@ Built with HTML, CSS, JavaScript, Vega and Vega-Lite.
 - [State and crop mosaic](js/09_mosaic.vg.json)
 - [Value per tonne distribution](js/06_distribution.vg.json)
 - [Production and value scatterplot](js/10_scatter.vg.json)
+- [Potato supply Sankey](js/11_potato_sankey.vg.json)
 
 [Hand drawn sketch](submission/hand_drawn_sketch.pdf)

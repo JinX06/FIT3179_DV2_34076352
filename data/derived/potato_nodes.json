@@ -1,0 +1,56 @@
+[
+  {
+    "id": "production",
+    "label": "Production",
+    "tonnes": 1493725,
+    "x_fraction": 0.04,
+    "y_fraction": 0,
+    "y_offset": 82.5,
+    "colour": "#1d5739"
+  },
+  {
+    "id": "processing",
+    "label": "Sent to processing",
+    "tonnes": 990000,
+    "x_fraction": 0.48,
+    "y_fraction": 0,
+    "y_offset": 52,
+    "colour": "#3f7953"
+  },
+  {
+    "id": "fresh_supply",
+    "label": "Fresh supply",
+    "tonnes": 453867,
+    "x_fraction": 0.48,
+    "y_fraction": 0.6627725987045808,
+    "y_offset": 97,
+    "colour": "#82a97b"
+  },
+  {
+    "id": "fresh_exports",
+    "label": "Fresh exports",
+    "tonnes": 49858,
+    "x_fraction": 0.48,
+    "y_fraction": 0.966621700781603,
+    "y_offset": 142,
+    "colour": "#9b6000"
+  },
+  {
+    "id": "retail",
+    "label": "Retail supply",
+    "tonnes": 390423,
+    "x_fraction": 0.9,
+    "y_fraction": 0.6627725987045808,
+    "y_offset": 71,
+    "colour": "#9fbd92"
+  },
+  {
+    "id": "food_service",
+    "label": "Food-service supply",
+    "tonnes": 63444,
+    "x_fraction": 0.9,
+    "y_fraction": 0.9241480192137107,
+    "y_offset": 133,
+    "colour": "#9fbd92"
+  }
+]

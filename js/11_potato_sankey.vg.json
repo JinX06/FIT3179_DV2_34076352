@@ -1,0 +1,440 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 450,
+  "background": null,
+  "padding": 0,
+  "autosize": {
+    "type": "fit",
+    "contains": "padding",
+    "resize": true
+  },
+  "description": "Estimated potato supply. Six nodes, five links, one proportional tonnes scale.",
+  "layer": [
+    {
+      "name": "potato_ribbons",
+      "data": {
+        "url": "data/derived/potato_samples.json",
+        "format": {
+          "type": "json"
+        }
+      },
+      "transform": [
+        {
+          "lookup": "link_id",
+          "from": {
+            "data": {
+              "url": "data/derived/potato_links.json",
+              "format": {
+                "type": "json"
+              }
+            },
+            "key": "link_id",
+            "fields": [
+              "source",
+              "target",
+              "tonnes",
+              "source_from",
+              "target_from",
+              "source_x",
+              "source_y",
+              "source_offset",
+              "source_label",
+              "target_x",
+              "target_y",
+              "target_offset",
+              "target_label",
+              "colour",
+              "production_share_percent"
+            ]
+          }
+        },
+        {
+          "calculate": "datum.target == 'fresh_exports' ? '#416f86' : datum.colour",
+          "as": "colour"
+        },
+        {
+          "calculate": "datum.source_x * width + 11",
+          "as": "sx"
+        },
+        {
+          "calculate": "datum.target_x * width",
+          "as": "tx"
+        },
+        {
+          "calculate": "datum.source_y * (height - 165) + datum.source_offset + datum.source_from * ((height - 165) / 1493725)",
+          "as": "sy"
+        },
+        {
+          "calculate": "datum.target_y * (height - 165) + datum.target_offset + datum.target_from * ((height - 165) / 1493725)",
+          "as": "ty"
+        },
+        {
+          "calculate": "datum.sx + (datum.tx - datum.sx) * datum.bx",
+          "as": "x"
+        },
+        {
+          "calculate": "datum.sy + (datum.ty - datum.sy) * datum.by",
+          "as": "y_top"
+        },
+        {
+          "calculate": "datum.y_top + datum.tonnes * ((height - 165) / 1493725)",
+          "as": "y_bottom"
+        },
+        {
+          "calculate": "isValid(datum.tonnes) ? format(datum.tonnes, ',.0f') + ' t' : 'Not reported'",
+          "as": "tonnes_display"
+        },
+        {
+          "calculate": "!isValid(datum.production_share_percent) ? 'Not reported' : datum.production_share_percent > 0 && datum.production_share_percent < 0.1 ? '<0.1%' : datum.production_share_percent == 0 ? '0%' : format(datum.production_share_percent, '.1f') + '%'",
+          "as": "production_share_percent_display"
+        }
+      ],
+      "params": [
+        {
+          "name": "ribbon_hover",
+          "select": {
+            "type": "point",
+            "fields": [
+              "link_id"
+            ],
+            "on": "pointerover",
+            "clear": "pointerout"
+          }
+        }
+      ],
+      "mark": {
+        "type": "area",
+        "orient": "vertical",
+        "interpolate": "linear"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "y": {
+          "field": "y_top",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null,
+          "stack": null
+        },
+        "y2": {
+          "field": "y_bottom"
+        },
+        "detail": {
+          "field": "link_id",
+          "type": "nominal",
+          "title": null
+        },
+        "color": {
+          "field": "colour",
+          "type": "nominal",
+          "scale": null,
+          "legend": null
+        },
+        "opacity": {
+          "condition": {
+            "param": "ribbon_hover",
+            "empty": false,
+            "value": 0.88
+          },
+          "value": 0.58
+        },
+        "tooltip": [
+          {
+            "field": "source_label",
+            "title": "From",
+            "type": "nominal"
+          },
+          {
+            "field": "target_label",
+            "title": "To",
+            "type": "nominal"
+          },
+          {
+            "field": "tonnes_display",
+            "title": "Supply",
+            "type": "nominal"
+          },
+          {
+            "field": "production_share_percent_display",
+            "title": "Potato crop share",
+            "type": "nominal"
+          }
+        ]
+      }
+    },
+    {
+      "name": "potato_nodes",
+      "data": {
+        "url": "data/derived/potato_nodes.json",
+        "format": {
+          "type": "json"
+        }
+      },
+      "transform": [
+        {
+          "calculate": "datum.x_fraction * width",
+          "as": "x0"
+        },
+        {
+          "calculate": "datum.y_fraction * (height - 165) + datum.y_offset",
+          "as": "y0"
+        },
+        {
+          "calculate": "datum.x0 + 11",
+          "as": "x1"
+        },
+        {
+          "calculate": "datum.y0 + datum.tonnes * ((height - 165) / 1493725)",
+          "as": "y1"
+        },
+        {
+          "calculate": "datum.id == 'fresh_exports' ? '#416f86' : datum.colour",
+          "as": "colour"
+        },
+        {
+          "calculate": "format(datum.tonnes, ',.0f') + ' t'",
+          "as": "tonnes_display"
+        }
+      ],
+      "mark": "rect",
+      "encoding": {
+        "x": {
+          "field": "x0",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "x2": {
+          "field": "x1"
+        },
+        "y": {
+          "field": "y0",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "y2": {
+          "field": "y1"
+        },
+        "color": {
+          "field": "colour",
+          "type": "nominal",
+          "scale": null,
+          "legend": null
+        },
+        "tooltip": [
+          {
+            "field": "label",
+            "title": "Supply stage",
+            "type": "nominal"
+          },
+          {
+            "field": "tonnes_display",
+            "title": "Supply",
+            "type": "nominal"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "data/derived/potato_nodes.json",
+        "format": {
+          "type": "json"
+        }
+      },
+      "transform": [
+        {
+          "calculate": "datum.x_fraction * width",
+          "as": "x0"
+        },
+        {
+          "calculate": "datum.y_fraction * (height - 165) + datum.y_offset",
+          "as": "y0"
+        },
+        {
+          "calculate": "datum.id == 'retail' || datum.id == 'food_service' ? width-3 : datum.x0",
+          "as": "label_x"
+        },
+        {
+          "calculate": "datum.y0 - (datum.id == 'retail' || datum.id == 'food_service' || datum.id == 'processing' && width < 380 ? 45 : 36)",
+          "as": "label_y"
+        },
+        {
+          "calculate": "datum.id == 'production' ? 'Potato production' : datum.id == 'processing' && width < 380 ? 'Sent to\\nprocessing' : datum.label",
+          "as": "display_label"
+        },
+        {
+          "calculate": "format(datum.tonnes, ',.0f') + ' t'",
+          "as": "tonnes_display"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "baseline": "top",
+        "fontSize": 14,
+        "align": {
+          "expr": "datum.id == 'retail' || datum.id == 'food_service' ? 'right' : 'left'"
+        },
+        "fontWeight": 700,
+        "lineBreak": "\n",
+        "lineHeight": 16,
+        "color": "#183247"
+      },
+      "encoding": {
+        "x": {
+          "field": "label_x",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "y": {
+          "field": "label_y",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "text": {
+          "field": "display_label"
+        },
+        "tooltip": [
+          {
+            "field": "label",
+            "title": "Supply stage",
+            "type": "nominal"
+          },
+          {
+            "field": "tonnes_display",
+            "title": "Supply",
+            "type": "nominal"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "data/derived/potato_nodes.json",
+        "format": {
+          "type": "json"
+        }
+      },
+      "transform": [
+        {
+          "calculate": "datum.x_fraction * width",
+          "as": "x0"
+        },
+        {
+          "calculate": "datum.y_fraction * (height - 165) + datum.y_offset",
+          "as": "y0"
+        },
+        {
+          "calculate": "datum.id == 'retail' || datum.id == 'food_service' ? width-3 : datum.x0",
+          "as": "label_x"
+        },
+        {
+          "calculate": "datum.y0 - (datum.id == 'retail' || datum.id == 'food_service' || datum.id == 'processing' && width < 380 ? 45 : 36)",
+          "as": "label_y"
+        },
+        {
+          "calculate": "format(datum.tonnes, ',') + ' t'",
+          "as": "quantity_label"
+        },
+        {
+          "calculate": "datum.label_y + (datum.id == 'processing' && width < 380 ? 34 : 20)",
+          "as": "quantity_y"
+        },
+        {
+          "calculate": "format(datum.tonnes, ',.0f') + ' t'",
+          "as": "tonnes_display"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "baseline": "top",
+        "fontSize": 14,
+        "align": {
+          "expr": "datum.id == 'retail' || datum.id == 'food_service' ? 'right' : 'left'"
+        },
+        "color": "#526575"
+      },
+      "encoding": {
+        "x": {
+          "field": "label_x",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "y": {
+          "field": "quantity_y",
+          "type": "quantitative",
+          "title": null,
+          "scale": null,
+          "axis": null
+        },
+        "text": {
+          "field": "quantity_label"
+        },
+        "tooltip": [
+          {
+            "field": "label",
+            "title": "Supply stage",
+            "type": "nominal"
+          },
+          {
+            "field": "tonnes_display",
+            "title": "Supply",
+            "type": "nominal"
+          }
+        ]
+      }
+    }
+  ],
+  "config": {
+    "font": "\"Source Sans 3\", Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "titleColor": "#526575",
+      "domain": false,
+      "tickColor": "#ced9df",
+      "gridColor": "#dce5ea",
+      "gridOpacity": 0.65,
+      "labelPadding": 6,
+      "titlePadding": 12,
+      "labelExpr": "datum.value === 0 ? '0' : datum.label"
+    },
+    "legend": {
+      "labelFontSize": 13,
+      "titleFontSize": 13,
+      "labelColor": "#526575",
+      "titleColor": "#526575",
+      "labelFontWeight": 400,
+      "titleFontWeight": 400,
+      "padding": 5
+    },
+    "text": {
+      "fontSize": 13,
+      "fontWeight": 400,
+      "color": "#183247"
+    }
+  }
+}
