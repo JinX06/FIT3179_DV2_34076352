@@ -5,7 +5,7 @@ Ong Jin Xiang | 34076352 | Monash University Malaysia | 2026
 
 An interactive visualisation of vegetable production in Australia, covering crop production, changes over time, growing regions, farm gate value, potato supply and export destinations.
 
-Website link will be added when published.
+[View the visualisation](https://jinx06.github.io/FIT3179_DV2_34076352/)
 
 Built with HTML, CSS, JavaScript, Vega and Vega-Lite.
 
@@ -19,19 +19,19 @@ Built with HTML, CSS, JavaScript, Vega and Vega-Lite.
 
 ## Chart specifications
 
-- [Crop production lollipop](js/01_crop_production.vg.json)
-- [Production trend](js/02a_tonnes_trend.vg.json)
-- [Value trend](js/02b_value_trend.vg.json)
-- [Crop change waterfall](js/03_waterfall.vg.json)
-- [Crop comparison dots](js/05_dumbbell.vg.json)
-- [Crop change heatmap](js/04_heatmap.vg.json)
-- [Carrot share map](js/07_choropleth.vg.json)
-- [State production map](js/08_symbols.vg.json)
-- [State and crop mosaic](js/09_mosaic.vg.json)
-- [Value per tonne distribution](js/06_distribution.vg.json)
-- [Production and value scatterplot](js/10_scatter.vg.json)
-- [Potato supply Sankey](js/11_potato_sankey.vg.json)
-- [Export flow map](js/12_export_flow.vg.json)
-- [Destination ranking](js/13_ranked_destinations.vg.json)
+- [Crop production lollipop](https://jinx06.github.io/FIT3179_DV2_34076352/js/01_crop_production.vg.json)
+- [Production trend](https://jinx06.github.io/FIT3179_DV2_34076352/js/02a_tonnes_trend.vg.json)
+- [Value trend](https://jinx06.github.io/FIT3179_DV2_34076352/js/02b_value_trend.vg.json)
+- [Crop change waterfall](https://jinx06.github.io/FIT3179_DV2_34076352/js/03_waterfall.vg.json)
+- [Crop comparison dots](https://jinx06.github.io/FIT3179_DV2_34076352/js/05_dumbbell.vg.json)
+- [Crop change heatmap](https://jinx06.github.io/FIT3179_DV2_34076352/js/04_heatmap.vg.json)
+- [Carrot share map](https://jinx06.github.io/FIT3179_DV2_34076352/js/07_choropleth.vg.json)
+- [State production map](https://jinx06.github.io/FIT3179_DV2_34076352/js/08_symbols.vg.json)
+- [State and crop mosaic](https://jinx06.github.io/FIT3179_DV2_34076352/js/09_mosaic.vg.json)
+- [Value per tonne distribution](https://jinx06.github.io/FIT3179_DV2_34076352/js/06_distribution.vg.json)
+- [Production and value scatterplot](https://jinx06.github.io/FIT3179_DV2_34076352/js/10_scatter.vg.json)
+- [Potato supply Sankey](https://jinx06.github.io/FIT3179_DV2_34076352/js/11_potato_sankey.vg.json)
+- [Export flow map](https://jinx06.github.io/FIT3179_DV2_34076352/js/12_export_flow.vg.json)
+- [Destination ranking](https://jinx06.github.io/FIT3179_DV2_34076352/js/13_ranked_destinations.vg.json)
 
 [Hand drawn sketch](submission/hand_drawn_sketch.pdf)
